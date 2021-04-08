@@ -15,9 +15,11 @@ The package includes:
 
 ## Requirements
 For this package to work, it is required that you first install the following:
-- [SourceMod](https://www.sourcemod.net/downloads.php)
-- [EventScripts-Emulator](https://github.com/Ayuto/EventScripts-Emulator)
+- [Source-Python](http://downloads.sourcepython.com/)
 - [Warcraft-Source](https://github.com/ThaPwned/WCS)
+- [SourceMod](https://www.sourcemod.net/downloads.php)
+- This is only if you are running a Windows Server, elsewise ignore the step below.
+  [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-US/download/details.aspx?id=48145)
 
 
 
@@ -34,19 +36,6 @@ For this package to work, it is required that you first install the following:
 
 6. Now restart your server, a server restart is necessary a reload won't do. 
    OBS: The first time you restart your server after adding the Emulator to it you will have to restart the server twice to fully work.
-
-
-
-## Requirements
-1.1 Source-Python - Can be downloaded here: http://forums.sourcepython.com/
-
-2.1 Warcraft-Source(https://github.com/ThaPwned/WCS)
-
-2.2 SourceMod(https://www.sourcemod.net/downloads.php)
-
-3.1 This step is only if you are running a Windows Server, elsewise ignore this part: 
-   ``Visual C++ Redistributable for Visual Studio 2015`` the 32 bit version must be installed.
-    Can be downloaded here: https://www.microsoft.com/en-US/download/details.aspx?id=48145
 
 
 
