@@ -18,8 +18,7 @@ For this package to work, it is required that you first install the following:
 - [Source-Python](http://downloads.sourcepython.com/)
 - [Warcraft-Source](https://github.com/ThaPwned/WCS)
 - [SourceMod](https://www.sourcemod.net/downloads.php)
-- This is only if you are running a Windows Server, elsewise ignore the step below.
-  [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-US/download/details.aspx?id=48145)
+- [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-US/download/details.aspx?id=48145) This is only if you are running a Windows Server, elsewise ignore this step.
 
 
 
