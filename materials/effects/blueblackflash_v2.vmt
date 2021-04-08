@@ -1,0 +1,7 @@
+"Sprite"
+{
+	"$basetexture" "effects/blueblackflash_v2"
+	"$spriteorientation" "parallel_upright"
+	"$spriteorigin" "[ 0.50 0.50 ]"
+	"$spriterendermode" 8
+}

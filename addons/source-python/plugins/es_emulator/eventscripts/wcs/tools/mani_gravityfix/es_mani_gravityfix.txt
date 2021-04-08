@@ -1,0 +1,48 @@
+//This script will fix the following problems that seem to appear only in Counter-Strike: Source:
+//
+//1) An issue which results in players maintaining their gravity from their current race onto whatever other
+//   race they may change to, even if the race they change to does not have any gravity altering skill in their kit.
+
+block load
+{
+	es_xset wcs_gravityfix_userid_t 0
+	es_xset wcs_gravityfix_userid_ct 0
+	es_xset wcs_gravityfix_restart_delay 0	
+}
+
+event player_team
+{
+	if (event_var(team) => 2) do
+	{
+		es wcs_setfx gravity event_var(userid) = 1 0
+	}
+}
+
+event player_death
+{
+	if (server_var(mp_ignore_round_win_conditions) == 1) do
+	{
+		es wcs_setfx gravity event_var(userid) = 1 0
+	}
+}
+
+event round_end
+{
+	if (server_var(mp_ignore_round_win_conditions) == 0) do
+	{
+		es_set wcs_gravityfix_restart_delay server_var(mp_round_restart_delay)
+		es_xmath wcs_gravityfix_restart_delay - 0.2
+		es foreach player wcs_gravityfix_userid_t #t "es_xdoblock wcs/tools/mani_gravityfix/fix_gravity_round_end_t"
+		es foreach player wcs_gravityfix_userid_ct #ct "es_xdoblock wcs/tools/mani_gravityfix/fix_gravity_round_end_ct"
+	}
+}
+
+block fix_gravity_round_end_t
+{
+	es wcs_setfx gravity server_var(wcs_gravityfix_userid_t) = 1 0
+}
+
+block fix_gravity_round_end_ct
+{
+	es wcs_setfx gravity server_var(wcs_gravityfix_userid_ct) = 1 0
+}

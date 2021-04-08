@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	// Original shader: AdditiveTextureAndVertexColor
+	"$basetexture" "sprites/ar2_muzzle3_v2"
+	"$additive" 1
+	"$vertexcolor" 1
+}

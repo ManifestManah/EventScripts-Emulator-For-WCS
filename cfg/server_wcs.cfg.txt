@@ -1,0 +1,30 @@
+/////////////////////////////////////////////////////////////////
+// Copy everything below and paste it in to your servr.cfg file//
+// which can be found in the directory csgo/cfg/               //
+/////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////
+// Various variables that helps solving one or multiple problems //
+///////////////////////////////////////////////////////////////////
+
+sv_disable_immunity_alpha 1									//Fixes multiple issues with invisibility skills in CS:GO
+sv_quota_stringcmdspersecond 200							//Fixes issues where clients would elsewise be kicked for issueing too many commands when using extensive ultimates 
+sv_infinite_ammo "0"                        				//Makes it so the player's active weapon will run out of ammo to make ammo and clip skills stay relevant
+sv_ignoregrenaderadio 1										//Makes the grenade messages and radio sounds dissappear, to avoid it being spammed when someone plays as a grenade based race 
+sv_allow_wait_command "1"                   				//Allows the the usage of the wait command for clients connected to this server.
+sv_pure "0" 												//Recommended to be off, to avoid players being auto-kicked if they've gotten some similar looking sprite files from other servers that they've previously connected to.
+sv_forcepreload "0"                         				//Forces server side preloading
+rcon mp_respawn_immunitytime 0								//Removes CS:GO's built-in spawnprotection to make respawning more balanced and less exploitable
+mp_free_armor 0												//Makes players spawn with 0 armor to make races with armor skills stay relevant
+mp_round_restart_delay 5  									//Recommended to be 4 seconds or more to prevent respawn skills from placing players outside of starting zones at the start of a new round 
+mp_autokick "0"                             				//An old fix used to solve problems with es_fire and other commands  
+
+
+///////////////////////////////////////////////////////////////////////
+// Server Logging - This helps us help you if something isn't working//
+///////////////////////////////////////////////////////////////////////
+
+log on                                     					//Enables logging, which can help pinpointing the origin of WCS and race related bugs and errors.
+sv_log_onefile "0"                          				//Log server information to only one file.
+sv_logecho "1"                              				//Echo log information to the console.
+sv_logfile "1"                              				//Log server information in the log file.

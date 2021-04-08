@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture" "effects/redflare_v2"
+	"$additive" "1"
+	"$vertexcolor" 1
+}

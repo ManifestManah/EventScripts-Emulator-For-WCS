@@ -1,0 +1,327 @@
+block load
+{
+	//Changes the method of teleportation: (Default: 0)
+	//Setting the value to 0 - Makes most of your races use the push-teleportation method. 
+	//Setting the value to 1 - Makes most of your races use intant teleportation. Beware as this can also result in players getting stuck in objects.
+ 	es_xset wcs_legacy_teleport_type 0
+
+	//Turns off/on visual fading overlays when using teleport skills. (1 = On / 0 = Off)
+	es_xset wcs_legacy_teleport_fade 1
+
+	//Turns off/on logging for all the races which has logging implemented. Keeping the debugging enabled for support purposes is recommended. (1 = On / 0 = Off)
+	es_xset wcs_race_debugging 1
+
+
+
+	//Don't edit anything below these lines unless you know exactly what you are doing!
+	//Sets all the variables that we are going to use in races' skills - normally you should not do it this way, you should use the var.txt found at cfg/source-python/wcs/var.txt
+	es_xset wcs_ffa_userid 0
+	es_xset wcs_execute_ultimate_ffa 0
+	es_xset wcs_phoenix_ffa 0
+	es_xset wcs_targetid_two 0
+	es_xset wcs_execute_ultimate 0
+	es_xset wcs_initial_players_struck 0
+	es_xset wcs_count_players_behind_walls 0
+	es_xset wcs_count_players_ultimate_immunity 0
+	es_xset wcs_count_players_actually_affected 0
+	es_xset location_count_t 0
+	es_xset wcs_getlevel 0
+	es_xset wcs_getmaxlevel 0
+	es_xset check_team 0
+	es_xset wcs_randomlocation 0
+	es_xset wcs_smokestack_counter 0
+	es_xset ex 0
+	es_xset wcs_ultinotexec 0
+	es_xset wcs_health 0
+	es_xset wcs_divider 0
+	es_xset wcs_speed 0
+	es_xset wcs_gravity 0
+	es_xset wcs_chance 0
+	es_xset wcs_damage 0
+	es_xset wcs_dmg 0
+	es_xset wcs_tmp 0
+	es_xset wcs_tmp2 0
+	es_xset wcs_tmp3 0
+	es_xset wcs_tmp4 0
+	es_xset wcs_tmp5 0
+	es_xset wcs_tmp6 0
+	es_xset wcs_tmp7 0
+	es_xset wcs_tmp8 0
+	es_xset wcs_tmp9 0
+	es_xset wcs_tmp10 0
+	es_xset wcs_tmp11 0
+	es_xset wcs_tmp12 0
+	es_xset wcs_tmp13 0
+	es_xset wcs_tmp14 0
+	es_xset wcs_tmp15 0
+	es_xset wcs_tmp16 0
+	es_xset wcs_team 0
+	es_xset wcs_team2 0
+	es_xset wcs_phoenix 0
+	es_xset wcs_invis 0
+	es_xset wcs_addhealth 0
+	es_xset wcs_range 0
+	es_xset wcs_fadetimer 0
+	es_xset wcs_multiplier 0
+	es_xset wcs_maxtargets 0
+	es_xset wcs_radius 0
+	es_xset wcs_radius2 0
+	es_xset wcs_alive 0
+	es_xset wcs_freezetime 0
+	es_xset wcs_time 0
+	es_xset wcs_money 0
+	es_xset wcs_hpmana 0
+	es_xset wcs_shaketime 0
+	es_xset wcs_bonushp 0
+	es_xset wcs_jetpack 0
+	es_xset wcs_armor 0
+	es_xset wcs_player 0
+	es_xset wcs_dead 0
+	es_xset wcs_uid 0
+	es_xset wcs_lng 0
+	es_xset wcs_rand 0
+	es_xset wcs_wardencounter 0
+	es_xset wcs_wardenround 0
+	es_xset wcs_target 0
+	es_xset wcs_targetid 0
+	es_xset wcs_amount 0
+	es_xset wcs_maxhp 0
+	es_xset wcs_round 0
+	es_xset wcs_maxheal 0
+	es_xset wcs_roundcounter 0
+	es_xset wcs_type 0
+	es_xset wcs_removeid 0
+	es_xset wcs_fxtype 0
+	es_xset wcs_op 0
+	es_xset wcs_params 0
+	es_xset wcs_res_ui 0
+	es_xset wcs_res_type 0
+	es_xset wcs_res_wep 0
+	es_xset wcs_res_give 0
+	es_xset wcs_res_knife 0
+	es_xset wcs_res_wep_wep 0
+	es_xset wcs_choice 0
+	es_xset wcs_todo 0
+	es_xset wcs_name 0
+	es_xset wcs_mole 0
+	es_xset wcs_exists 0
+	es_xset wcs_respawn 0
+	es_xset test_this 0
+	es_xset wcs_speed_var 0
+	es_xset wcs_gamecheck 0
+	es_xset wcs_distance 0
+	es_xset wcs_getrace 0
+	es_xset wcs_getlevel 0
+	es_xset wcs_ppuser 0
+	es_xset wcs_healcounter 0
+	es_xset wcs_trapcounter 0
+	es_xset hook_list 0
+	es_xset hook 0
+	es_xset ss_name 0
+	es_xset wcs_shoprand 0
+	es_xset wcs_shopvar 0
+	es_xset wcs_team_target 0
+	es_xset wcs_team_targetn 0
+	es_xset wcs_wall 0
+	es_xset wcs_ok 0
+	es_xset isdead 0
+	es_xset target 0
+	es_xset alive 0
+	es_xset wcs_magnitude 0
+	es_xset wcs_duration 0
+	es_xset count 0
+	es_xset wcs_counter 0
+	es_xset wcs_pcount 0
+	es_xset wcs_count 0
+	es_xset entitycount 0
+	es_xset wcs_ammo 0
+	es_xset coords 0
+	es_xset wcs_race 0
+	es_xset wcs_primary 0
+	es_xset wcs_secondary 0
+	es_xset wcs_points 0
+	es_xset wcs_red 0
+	es_xset wcs_green 0
+	es_xset wcs_blue 0
+	es_xset wcs_alpha 0
+	es_xset player_model 0
+	es_xset targeten 0
+	es_xset wcs_skilllevel 0
+	es_xset wcs_defuseid 0
+	es_xset wcs_bombid 0
+	es_xset wcs_custom_speed 0
+	es_xset wcs_midnightspeed 0
+	es_xset wcs_vip 0
+	es_xset admincheck 0
+	es_xset wcs_valkhp 0
+	es_xset blackholeuser 0
+	es_xset dark_seer 0
+	es_xset vector1 0
+	es_xset vector2 0
+	es_xset vector3 0
+	es_xset vector4 0
+	es_xset vector5 0
+	es_xset vector6 0
+	es_xset vector7 0
+	es_xset vector8 0
+	es_xset vector9 0
+	es_xset vector10 0
+	es_xset vector11 0
+	es_xset vector12 0
+	es_xset vector13 0
+	es_xset vector14 0
+	es_xset vector15 0
+	es_xset vector16 0
+	es_xset aura_user 0
+	es_xset wcs_x 0
+	es_xset wcs_y 0
+	es_xset wcs_z 0
+	es_xset wcs_x1 0
+	es_xset wcs_y1 0
+	es_xset wcs_z1 0
+	es_xset wcs_x2 0
+	es_xset wcs_y2 0
+	es_xset wcs_z2 0
+	es_xset wcs_x3 0
+	es_xset wcs_y3 0
+	es_xset wcs_z3 0
+	es_xset wcs_x4 0
+	es_xset wcs_y4 0
+	es_xset wcs_z4 0
+	es_xset wcs_x5 0
+	es_xset wcs_y5 0
+	es_xset wcs_z5 0
+	es_xset wcs_x6 0
+	es_xset wcs_y6 0
+	es_xset wcs_z6 0
+	es_xset wcs_x7 0
+	es_xset wcs_y7 0
+	es_xset wcs_z7 0
+	es_xset wcs_x8 0
+	es_xset wcs_y8 0
+	es_xset wcs_z8 0
+	es_xset wcs_x9 0
+	es_xset wcs_y9 0
+	es_xset wcs_z9 0
+	es_xset wcs_x10 0
+	es_xset wcs_y10 0
+	es_xset wcs_z10 0
+	es_xset wcs_x11 0
+	es_xset wcs_y11 0
+	es_xset wcs_z11 0
+	es_xset wcs_x12 0
+	es_xset wcs_y12 0
+	es_xset wcs_z12 0
+	es_xset wcs_x13 0
+	es_xset wcs_y13 0
+	es_xset wcs_z13 0
+	es_xset wcs_x15 0
+	es_xset wcs_y15 0
+	es_xset wcs_z15 0
+	es_xset wcs_x16 0
+	es_xset wcs_y16 0
+	es_xset wcs_z16 0
+	es_xset wcs_x17 0
+	es_xset wcs_y17 0
+	es_xset wcs_z17 0
+	es_xset wcs_x24 0
+	es_xset wcs_y24 0
+	es_xset wcs_z24 0
+	es_xset wcs_dice 0
+	es_xset wcs_dice1 0
+	es_xset wcs_dice2 0
+	es_xset wcs_dice3 0
+	es_xset wcs_dice4 0
+	es_xset wcs_dice5 0
+	es_xset wcs_dice6 0
+	es_xset wcs_dice7 0
+	es_xset wcs_dice8 0
+	es_xset wcs_dice9 0
+
+	//Loads the Eventscript commands; enabling the wcs_domole command to be used by races
+	es_load wcs/tools/commands
+
+	//Loads the 
+	es_xset wcs_gravityfix_gamecheck 0
+	es_getgame wcs_gravityfix_gamecheck
+	if ("Counter-Strike: Source" in server_var(wcs_gravityfix_gamecheck)) do
+	{
+		es_load wcs/tools/mani_gravityfix
+	}
+}
+
+//Phoenix Skill's ressurection part
+event player_death
+{
+	if (event_var(es_userteam) = 2) then es_xset wcs_team #t
+	if (event_var(es_userteam) = 3) then es_xset wcs_team #ct
+	es wcsgroup get phoenix wcs_phoenix server_var(wcs_team)
+	if (server_var(wcs_phoenix) > 0) do
+	{
+		ifx true(wcs_race_debugging) do
+		{
+			wcs_log [Feature]: Phoenix Skill - [Block] Event Player_Death (START)
+		}
+		es_tell event_var(userid) #multi #green[WCS] #lightgreenPhoenix - You will be ressurected in 3 seconds!
+		es_delayed 3 wcs_spawn event_var(userid) 1
+		es_math wcs_phoenix - 1
+		es wcsgroup set phoenix server_var(wcs_team) server_var(wcs_phoenix)
+		ifx true(wcs_race_debugging) do
+		{
+			wcs_log [Feature]: Phoenix Skill - [Block] Event Player_Death (END)
+		}
+	}
+	//Phonix Alternative if Free-For-All is Enabled
+	es wcsgroup get phoenix_ffa wcs_phoenix_ffa server_var(wcs_team)
+	if (server_var(wcs_phoenix_ffa) == 1) do
+	{
+		es_tell event_var(userid) #multi #green[WCS]#lightgreen Phoenix - You're reviving in #green3 #lightgreenseconds!
+		es wcs_centertell event_var(userid) Revival in 3 seconds!
+		es_delayed 1 es wcs_centertell event_var(userid) Revival in 2 seconds!
+		es_delayed 2 es wcs_centertell event_var(userid) Revival in 1 seconds!
+		es_delayed 3 es wcs_centertell event_var(userid) You've been revived! 
+		es_getplayerlocation wcs_x1 wcs_y1 wcs_z1 event_var(userid)
+		es_delayed 3 es_emitsound player event_var(userid) wcs/resurrect.mp3 1.0 0.3
+		es_delayed 3 wcs_spawn event_var(userid) 1
+		es_delayed 3.1 wcs_teleport event_var(userid) server_var(wcs_x1) server_var(wcs_y1) server_var(wcs_z1)
+		es est_effect 10 #a 0 sprites/lgtning.vmt server_var(wcs_x1) server_var(wcs_y1) server_var(wcs_z1) 75 280 3 60 20 0 10 213 255 170 6
+		es_delayed .1 est_effect 10 #a 0 sprites/lgtning.vmt server_var(wcs_x1) server_var(wcs_y1) server_var(wcs_z1) 75 280 2.9 60 20 0 10 213 255 170 8
+	}
+}
+
+event round_start
+{
+	//Turns on Eventscript's "Noisy" mode, required for some races' skills to work
+	//This had to be done on round_start as multiple servers seem to have had issus with this not working when doing it in the block load section
+	es_xdoblock corelib/noisy_on
+}
+
+//Phoenix Skill's reset all phoenix wcsgroups for the team
+event round_end
+{
+	ifx true(wcs_race_debugging) do
+	{
+		wcs_log [Feature]: Phoenix Skill - [Block] Event Round_End (START)
+	}
+	es wcsgroup set phoenix #ct 0
+	es wcsgroup set phoenix #t 0
+	es wcs_foreach player wcs_player #all "es_xdoblock wcs/tools/wcs_essentials/phoenix_round_end"
+	ifx true(wcs_race_debugging) do
+	{
+		wcs_log [Feature]: Phoenix Skill - [Block] Event Round_End (END)
+	}
+}
+
+//Phoenix Skill's resets the has used phoenix for the individual phoenix user
+block phoenix_round_end
+{
+	ifx true(wcs_race_debugging) do
+	{
+		wcs_log [Feature]: Phoenix Skill - [Block] Skill: Phoenix_Round_End (EXECUTED START)
+	}
+	es wcsgroup set has_used_phoenix server_var(wcs_player) 0
+	ifx true(wcs_race_debugging) do
+	{
+		wcs_log [Feature]: Phoenix Skill - [Block] Skill: Phoenix_Round_End (EXECUTED END)
+	}
+}
