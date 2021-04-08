@@ -90,6 +90,6 @@ Most of the work is already done. The following is a list of things that need to
 
 
 
-##Credits
+## Credits
 A Big thank you to Ayuto for creating and sharing the original EventScripts-Emulator with the rest of the community.
 The original version which has not been modified specifically with WC:S in mind can be found here: https://github.com/Ayuto/EventScripts-Emulator 
