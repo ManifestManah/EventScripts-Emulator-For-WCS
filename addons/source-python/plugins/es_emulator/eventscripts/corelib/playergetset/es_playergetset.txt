@@ -1667,7 +1667,8 @@ block setmodel
       if (server_var(_playergetset_temp2) notequalto ".mdl") then es_xformat _playergetset_model "%1.mdl" server_var(_playergetset_model)
       es_precachemodel _playergetset_temp server_var(_playergetset_model)
       es_setplayerprop server_var(_playergetset_userid) "CBaseEntity.m_nModelIndex" server_var(_playergetset_temp)
-      es playerset color server_var(_playergetset_userid) 255 255 255 255
+      es wcs_color server_var(_playergetset_userid) 255 255 255 255
+      //es playerset color server_var(_playergetset_userid) 255 255 255 255
     }
     else do
     {
