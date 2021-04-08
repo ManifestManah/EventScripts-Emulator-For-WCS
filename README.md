@@ -5,10 +5,8 @@ The package includes:
 - Fixes & Changes the normal EventScripts Emulator doesn't have.
 - Extra Fixes that address and solve many of the issues known to negatively affect with the WC:S mod. 
 - Extra available commands that are used by various WC:S content. 
- 
 - A config file containing multiple cvars that will solve issues known to negatively affect the WC:S mod.
 - A config file containing the correct plugin and addon loading order.
-
 - Texture materials used for Visual Effects by various WC:S content.
 - Sound files (Mp3 format) used for Sound Effects by various WC:S content.
 - A SourceMod based auto-download & precaching system for the custom content mentioned above.
@@ -61,21 +59,21 @@ If you're having trouble installing the package, you can also get assistance in 
 ## Development Status
 Most of the work is already done. The following is a list of things that need to be done.
 
-1.1 [General]				Add the possibility to unload the emulator.
-1.2 [General]				Do extensive testings
-2.1 [Python]				Implement es.forcevalue() - Revisit CS:GO implementation
-2.2 [Python]				Implement es.old_mexec()
-2.3 [Python]				Implement es.physics('start', ...)
-2.4 [Python]				Implement es.regexec()
-3.1 [ES:S]					Implement pycmd_register
-4.1 [Console variables]		Implement mattie_eventscripts
-4.2 [Console variables]		Implement eventscripts_debug_showfunctions
-4.3 [Console variables]		Implement mattie_python
-5.1 [Bug Fixing] 			Implement any bugs / issue fixes that gets reported or posted.
+1.  [General] Add the possibility to unload the emulator.
+1.  [General] Do extensive testings
+2.  [Python] Implement es.forcevalue() - Revisit CS:GO implementation
+3.  [Python]	Implement es.old_mexec()
+4.  [Python]	Implement es.physics('start', ...)
+5.  [Python]	Implement es.regexec()
+6.  [ES:S] Implement pycmd_register
+7.  [Console variables]	Implement mattie_eventscripts
+8.  [Console variables]	Implement eventscripts_debug_showfunctions
+9.  [Console variables]	Implement mattie_python
+10. [Bug Fixing] Implement any bugs / issue fixes that gets reported or posted.
 
 
 
-##Some Additional Side Notes
+## Some Additional Side Notes
 1. You can also use the EventScripts API in Source.Python plugins.
 
 2. Unlike EventScripts this emulator also supports CS:GO.
