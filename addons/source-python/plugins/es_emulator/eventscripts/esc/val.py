@@ -32,7 +32,8 @@ def VAR(value):
 def OP(value):
   if value in _operators:
     return _functions[_operators[value]]
-  print("WAKAWAKAWAKA", value)
+  print("Operation Error: Something went wrong executing an operation.", value)
+  print("Look in File: [Val.Py] - Line 36", value)
 
 @esctype
 def ANY(value):

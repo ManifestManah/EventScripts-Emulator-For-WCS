@@ -48,11 +48,10 @@ If you're having trouble installing the package, you can also get assistance in 
 Most of the work is already done. The following is a list of things that need to be done.
 
 1.  [General] Add the possibility to unload the emulator.
-1.  [General] Do extensive testings
-2.  [Python] Implement es.forcevalue() - Revisit CS:GO implementation
-3.  [Python]	Implement es.old_mexec()
-4.  [Python]	Implement es.physics('start', ...)
-5.  [Python]	Implement es.regexec()
+2.  [General] Do extensive testings
+3.  [Python] Implement es.old_mexec()
+4.  [Python] Implement es.physics('start', ...)
+5.  [Python] Implement es.regexec()
 6.  [ES:S] Implement pycmd_register
 7.  [Console variables]	Implement mattie_eventscripts
 8.  [Console variables]	Implement eventscripts_debug_showfunctions
