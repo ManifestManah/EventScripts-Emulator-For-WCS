@@ -72,10 +72,10 @@ bool ReincarnationItemKevlarHelmet[MAXPLAYERS + 1] = {false,...};
 // Global Integers (Checks)
 int PlayerHasAbsorptionShield[MAXPLAYERS + 1] = {0, ...};
 int PlayerHasFlicker[MAXPLAYERS + 1] = {0, ...};
+int PlayerHasHealthDecay[MAXPLAYERS + 1] = {0, ...};
 int PlayerHasFOV[MAXPLAYERS + 1] = {0, ...};
 int PlayerHasPoisonSmokes[MAXPLAYERS + 1] = {0, ...};
 int PlayerHasPropModel[MAXPLAYERS + 1] = {-1, ...};
-
 
 // Global Integers (Functionality)
 int LastButtonsPressed[MAXPLAYERS + 1] = {0, ...};
@@ -121,6 +121,7 @@ public void OnPluginStart()
 	RegServerCmd("wcs_caller_setfxfov", Command_SetfxFOV);
 	RegServerCmd("wcs_caller_setfxdoublejump", Command_SetfxDoubleJump);
 	RegServerCmd("wcs_caller_setfxheadshotimmunity", Command_SetfxHeadshotImmunity);
+	RegServerCmd("wcs_caller_setfxhealthdecay", Command_SetfxHealthDecay);
 	RegServerCmd("wcs_caller_setfxnoclip", Command_SetfxNoClip);
 	RegServerCmd("wcs_caller_setfxnoscope", Command_SetfxNoScope);
 	RegServerCmd("wcs_caller_setfxplantbombanywhere", Command_PlantBombAnywhere);
@@ -133,12 +134,11 @@ public void OnPluginStart()
 	RegServerCmd("wcs_caller_setfxreincarnation", Command_SetfxReincarnation);
 	RegServerCmd("wcs_caller_setfxreversemovement", Command_SetfxReverseMovement);
 	RegServerCmd("wcs_caller_setfxthirdperson", Command_SetfxThirdPerson);
-
+	
 
 
 
 //	RegServerCmd("wcs_caller_crouchinvisibility", Command_SetfxCrouchInvisibility);
-//	RegServerCmd("wcs_caller_healthdecay", Command_SetfxHealthDecay);
 
 
 	///////////////////////////
@@ -171,7 +171,6 @@ public void OnPluginStart()
 	// - Crouch Invisibility
 	// - Sticky Grenades
 	// - Impact Explosion Grenades
-	// - HealthDecay
 	// - Est_Rocket
 	
 	// Commands
@@ -1062,6 +1061,12 @@ public Action ResetAllEffects(int client)
 		PlayerHasHealingGun[client] = false;
 	}
 
+	// Health Decay
+	if(PlayerHasHealthDecay[client])
+	{
+		PlayerHasHealthDecay[client] = 0;
+	}
+
 	// NoClip
 	if(PlayerHasNoClip[client])
 	{
@@ -1215,6 +1220,11 @@ public Action Timer_RemoveEntity(Handle timer, int Entity)
 		AcceptEntityInput(Entity, "Kill");
 	}
 }
+
+
+
+
+
 
 
 
@@ -2256,6 +2266,137 @@ public Action Timer_RemoveSetfxHeadshotImmunity(Handle timer, int client)
 	}
 
 	PlayerHasHeadshotImmunity[client] = 0.00;
+
+	return Plugin_Continue;
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Command - Setfx Health Decay														//
+// - Usage: wcs_setfx healthdecay <userid> <operator> <Amount / 0 Off> <time> 		//
+//////////////////////////////////////////////////////////////////////////////////////
+
+
+public Action Command_SetfxHealthDecay(int args)
+{
+	char userid[128];
+	GetCmdArg(1, userid, sizeof(userid));
+	int client = StringToInt(userid);
+	client = GetClientOfUserId(client);
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	char operator_char[16];
+	GetCmdArg(2, operator_char, sizeof(operator_char));
+
+	if(!StrEqual(operator_char, "="))
+	{
+		PrintToServer("Command Syntax Error:");
+		PrintToServer("wcs_setfx healthdecay only supports the following operator: '='");
+		return Plugin_Continue;
+	}
+
+	char amount_char[16];
+	GetCmdArg(3, amount_char, sizeof(amount_char));
+	int amount = StringToInt(amount_char);
+	if(amount == 0)
+	{
+		PlayerHasHealthDecay[client] = 0;
+		return Plugin_Continue;
+	}
+	else if(amount >= 1)
+	{
+		PlayerHasHealthDecay[client] = amount;
+	}
+	else
+	{
+		PrintToServer("Command Syntax Error:");
+		PrintToServer("wcs_setfx healthdecay only supports '0' and positive integer values");
+		return Plugin_Continue;
+	}
+
+	char time_char[32];
+	GetCmdArg(4, time_char, sizeof(time_char));
+	float time = StringToFloat(time_char);
+	if(time > 0.00)
+	{
+		time += 1.0;
+		CreateTimer(time, Timer_RemoveSetfxHealthDecay, client, TIMER_FLAG_NO_MAPCHANGE);
+	}
+
+	int initialRound = GameRules_GetProp("m_totalRoundsPlayed");
+
+	DataPack pack = new DataPack();
+	pack.WriteCell(client);
+	pack.WriteCell(initialRound);
+
+	CreateTimer(1.0, Timer_HealthDecayActive, pack, TIMER_REPEAT);
+
+	return Plugin_Continue;
+}
+
+
+public Action Timer_RemoveSetfxHealthDecay(Handle timer, int client)
+{
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	PlayerHasHealthDecay[client] = 0;
+
+	return Plugin_Continue;
+}
+
+
+public Action Timer_HealthDecayActive(Handle timer, DataPack data)
+{
+	data.Reset();
+	int client = data.ReadCell();
+	int initialRound = data.ReadCell();
+
+	if(!IsValidClient(client))
+	{
+		delete data;
+		return Plugin_Stop;
+	}
+
+	int currentRound = GameRules_GetProp("m_totalRoundsPlayed");
+	if(initialRound != currentRound)
+	{
+		delete data;
+		return Plugin_Stop;
+	}
+
+	if(PlayerHasHealthDecay[client] <= 0)
+	{
+		delete data;
+		return Plugin_Stop;
+	}
+
+	int DecayAmount = PlayerHasHealthDecay[client];
+
+	int PlayerHealth = GetClientHealth(client);
+
+	if(PlayerHealth > DecayAmount)
+	{
+		PlayerHealth = PlayerHealth - DecayAmount;
+
+		SetEntProp(client, Prop_Data, "m_iMaxHealth", PlayerHealth);
+		
+		SetEntityHealth(client, PlayerHealth);
+
+		return Plugin_Continue;
+	}
+	else 
+	{
+		DecayAmount *= 2;
+		DealDamagePoisonSmoke(client, DecayAmount, client);
+	}
 
 	return Plugin_Continue;
 }
