@@ -50,12 +50,15 @@ bool PlayerHasDrunk[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasHealingGun[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasNoClip[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasNoScope[MAXPLAYERS + 1] = {false,...};
-bool PlayerHasReversedMovement[MAXPLAYERS + 1] = { false, ... };
-bool PlayerHasReincarnation[MAXPLAYERS + 1] = { false, ... };
-bool PlayerHasThirdPerson[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasQuickDefuse[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasQuickExplode[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasQuickPlant[MAXPLAYERS + 1] = {false,...};
+bool PlayerHasQuickScope[MAXPLAYERS + 1] = {false,...};
+bool PlayerHasPlantBombAnywhere[MAXPLAYERS + 1] = {false,...};
+bool PlayerHasRadarReveal[MAXPLAYERS + 1] = {false,...};
+bool PlayerHasReversedMovement[MAXPLAYERS + 1] = { false, ... };
+bool PlayerHasReincarnation[MAXPLAYERS + 1] = { false, ... };
+bool PlayerHasThirdPerson[MAXPLAYERS + 1] = {false,...};
 
 
 // Global Booleans (Functionality)
@@ -120,13 +123,18 @@ public void OnPluginStart()
 	RegServerCmd("wcs_caller_setfxheadshotimmunity", Command_SetfxHeadshotImmunity);
 	RegServerCmd("wcs_caller_setfxnoclip", Command_SetfxNoClip);
 	RegServerCmd("wcs_caller_setfxnoscope", Command_SetfxNoScope);
+	RegServerCmd("wcs_caller_setfxplantbombanywhere", Command_PlantBombAnywhere);
 	RegServerCmd("wcs_caller_setfxparalyze", Command_SetfxParalyze);
 	RegServerCmd("wcs_caller_setfxquickdefuse", Command_SetfxQuickDefuse);
 	RegServerCmd("wcs_caller_setfxquickexplode", Command_SetfxQuickExplode);
 	RegServerCmd("wcs_caller_setfxquickplant", Command_SetfxQuickPlant);
+	RegServerCmd("wcs_caller_setfxquickscope", Command_SetfxQuickScope);
+	RegServerCmd("wcs_caller_setfxradarreveal", Command_SetfxRadarReveal);
 	RegServerCmd("wcs_caller_setfxreincarnation", Command_SetfxReincarnation);
 	RegServerCmd("wcs_caller_setfxreversemovement", Command_SetfxReverseMovement);
 	RegServerCmd("wcs_caller_setfxthirdperson", Command_SetfxThirdPerson);
+
+
 
 
 //	RegServerCmd("wcs_caller_crouchinvisibility", Command_SetfxCrouchInvisibility);
@@ -153,6 +161,7 @@ public void OnPluginStart()
 
 
 	// Setfx
+	// - Set Resist
 	// - Quick Reload
 	// - Quick weapon Switch
 	// - Wallhack
@@ -163,7 +172,7 @@ public void OnPluginStart()
 	// - Sticky Grenades
 	// - Impact Explosion Grenades
 	// - HealthDecay
-	// 
+	// - Est_Rocket
 	
 	// Commands
 	// - Eye Laser
@@ -208,7 +217,7 @@ public void OnPluginStart()
 	HookEvent("bomb_beginplant", Event_BombBeginPlant, EventHookMode_Post);
 	HookEvent("bomb_begindefuse", Event_BombBeginDefuse, EventHookMode_Post);	
 	HookEvent("smokegrenade_detonate", Event_SmokeGrenadeDetonate, EventHookMode_Post);
-
+	HookEvent("weapon_zoom", Event_WeaponZoom, EventHookMode_Post);
 
 
 	// Calls upon our function named DownloadAndPrecacheFiles
@@ -221,6 +230,7 @@ public void OnPluginStart()
 		{
 			SDKHook(client, SDKHook_OnTakeDamage, Event_OnDamageTaken);
 			SDKHook(client, SDKHook_PreThink, Event_OnPreThink);
+			SDKHook(client, SDKHook_PostThink, Event_OnPostThink);
 			ResetAllEffects(client);
 		}
 	}
@@ -229,17 +239,28 @@ public void OnPluginStart()
 
 
 
-
-
-
-
-
-
-
-
 ////////////////
 // - Events - //
 ////////////////
+
+public Action Event_WeaponZoom(Handle event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	if(!PlayerHasQuickScope[client])
+	{
+		return Plugin_Continue;
+	}
+
+	CreateTimer(0.25, Timer_QuickScopeUnzoom, client, TIMER_FLAG_NO_MAPCHANGE);
+
+	return Plugin_Continue;
+}
 
 
 public Action Event_BombBeginPlant(Handle event, const char[] name, bool dontBroadcast)
@@ -776,16 +797,19 @@ public void OnClientPostAdminCheck(int client)
 	{
 		SDKHook(client, SDKHook_OnTakeDamage, Event_OnDamageTaken);
 		SDKHook(client, SDKHook_PreThink, Event_OnPreThink);
+		SDKHook(client, SDKHook_PostThink, Event_OnPostThink);
 
 		ResetAllEffects(client);
 	}
 }
 
 
+
 public void OnClientDisconnect(int client)
 {
 	SDKUnhook(client, SDKHook_OnTakeDamage, Event_OnDamageTaken);
 	SDKUnhook(client, SDKHook_PreThink, Event_OnPreThink);
+	SDKUnhook(client, SDKHook_PreThink, Event_OnPostThink);
 }
 
 
@@ -795,6 +819,51 @@ public void OnMapStart()
 	DownloadAndPrecacheFiles();
 }
 
+
+
+public Action Event_OnPostThink(int client)
+{
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	if(IsFakeClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	if(PlayerHasRadarReveal[client])
+	{
+		for(int i = 1 ;i <= MaxClients; i++)
+		{
+			if(!IsValidClient(i))
+			{
+				continue;
+			}
+
+			if(i == client)
+			{
+				continue;
+			}
+
+			if(GetClientTeam(client) == GetClientTeam(i))
+			{
+				continue;
+			}
+
+			SetEntPropEnt(i, Prop_Send, "m_bSpotted", 1);
+		}
+	}
+
+	// Plant Bomb Anywhere
+	if(PlayerHasPlantBombAnywhere[client])
+	{
+		SetEntPropEnt(client, Prop_Send, "m_bInBombZone", 1);
+	}
+
+	return Plugin_Continue;
+}
 
 
 
@@ -1026,6 +1095,12 @@ public Action ResetAllEffects(int client)
 		}
 	}
 
+	// Plant Bomb Anywhere
+	if(PlayerHasPlantBombAnywhere[client])
+	{
+		PlayerHasPlantBombAnywhere[client] = false;
+	}
+
 	// Quick Bomb Defuse
 	if(PlayerHasQuickDefuse[client])
 	{
@@ -1042,6 +1117,18 @@ public Action ResetAllEffects(int client)
 	if(PlayerHasQuickPlant[client])
 	{
 		PlayerHasQuickPlant[client] = false;
+	}
+
+	// Quick Scope
+	if(PlayerHasQuickScope[client])
+	{
+		PlayerHasQuickScope[client] = false;
+	}
+
+	// Radar Reveal
+	if(PlayerHasRadarReveal[client])
+	{
+		PlayerHasRadarReveal[client] = false;
 	}
 
 	// Reversed Movement Keys
@@ -1128,11 +1215,6 @@ public Action Timer_RemoveEntity(Handle timer, int Entity)
 		AcceptEntityInput(Entity, "Kill");
 	}
 }
-
-
-
-
-
 
 
 
@@ -2326,6 +2408,83 @@ public Action Timer_RemoveSetfxNoScope(Handle timer, int client)
 }
 
 
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Command - Setfx PlantBombAnywhere												//
+// - Usage: wcs_setfx plantbombanywhere <userid> <operator> <1 On / 0 Off> <time> 	//
+//////////////////////////////////////////////////////////////////////////////////////
+
+
+public Action Command_PlantBombAnywhere(int args)
+{
+	char userid[128];
+	GetCmdArg(1, userid, sizeof(userid));
+	int client = StringToInt(userid);
+	client = GetClientOfUserId(client);
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	char operator_char[16];
+	GetCmdArg(2, operator_char, sizeof(operator_char));
+
+	if(!StrEqual(operator_char, "="))
+	{
+		PrintToServer("Command Syntax Error:");
+		PrintToServer("wcs_setfx plantbombanywhere only supports the following operator: '='");
+		return Plugin_Continue;
+	}
+
+	char amount_char[16];
+	GetCmdArg(3, amount_char, sizeof(amount_char));
+	int amount = StringToInt(amount_char);
+	if(amount == 0)
+	{
+		PlayerHasPlantBombAnywhere[client] = false;
+		return Plugin_Continue;
+	}
+	else if(amount == 1)
+	{
+		PlayerHasPlantBombAnywhere[client] = true;
+	}
+	else
+	{
+		PrintToServer("Command Syntax Error:");
+		PrintToServer("wcs_setfx plantbombanywhere only supports the following values: '0', '1'");
+		return Plugin_Continue;
+	}
+
+	char time_char[32];
+	GetCmdArg(4, time_char, sizeof(time_char));
+	float time = StringToFloat(time_char);
+	if(time > 0.00)
+	{
+		CreateTimer(time, Timer_RemoveSetfxPlantBombAnywhere, client, TIMER_FLAG_NO_MAPCHANGE);
+	}
+
+	return Plugin_Continue;
+}
+
+
+public Action Timer_RemoveSetfxPlantBombAnywhere(Handle timer, int client)
+{
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	PlayerHasPlantBombAnywhere[client] = false;
+
+	return Plugin_Continue;
+}
+
+
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////
 // Command - Setfx Paralyze 														//
 // - Usage: wcs_setfx paralyze <userid> <operator> <1 On / 0 Off> <time> 			//
@@ -2612,6 +2771,118 @@ public Action Timer_RemoveSetfxQuickPlant(Handle timer, int client)
 
 
 //////////////////////////////////////////////////////////////////////////////////////
+// Command - Setfx QuickScope 														//
+// - Usage: wcs_setfx quickscope <userid> <operator> <1 On / 0 Off> <time> 			//
+//////////////////////////////////////////////////////////////////////////////////////
+
+
+public Action Command_SetfxQuickScope(int args)
+{
+	char userid[128];
+	GetCmdArg(1, userid, sizeof(userid));
+	int client = StringToInt(userid);
+	client = GetClientOfUserId(client);
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	char operator_char[16];
+	GetCmdArg(2, operator_char, sizeof(operator_char));
+
+	if(!StrEqual(operator_char, "="))
+	{
+		PrintToServer("Command Syntax Error:");
+		PrintToServer("wcs_setfx quickscope only supports the following operator: '='");
+		return Plugin_Continue;
+	}
+
+	char amount_char[16];
+	GetCmdArg(3, amount_char, sizeof(amount_char));
+	int amount = StringToInt(amount_char);
+	if(amount == 0)
+	{
+		PlayerHasQuickScope[client] = false;
+		return Plugin_Continue;
+	}
+	else if(amount == 1)
+	{
+		PlayerHasQuickScope[client] = true;
+	}
+	else
+	{
+		PrintToServer("Command Syntax Error:");
+		PrintToServer("wcs_setfx quickscope only supports the following values: '0', '1'");
+		return Plugin_Continue;
+	}
+
+	char time_char[32];
+	GetCmdArg(4, time_char, sizeof(time_char));
+	float time = StringToFloat(time_char);
+	if(time > 0.00)
+	{
+		CreateTimer(time, Timer_RemoveSetfxQuickScope, client, TIMER_FLAG_NO_MAPCHANGE);
+	}
+
+	return Plugin_Continue;
+}
+
+
+public Action Timer_RemoveSetfxQuickScope(Handle timer, int client)
+{
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	PlayerHasQuickScope[client] = false;
+
+	return Plugin_Continue;
+}
+
+
+public Action Timer_QuickScopeUnzoom(Handle timer, int client)
+{
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	if(!IsPlayerAlive(client))
+	{
+		return Plugin_Continue;
+	}
+
+	if(!PlayerHasQuickScope[client])
+	{
+		return Plugin_Continue;
+	}
+
+	int Weapon = GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY);
+
+	if(!IsValidEntity(Weapon))
+	{
+		return Plugin_Continue;
+	}
+
+	SetEntProp(Weapon, Prop_Send, "m_zoomLevel", 0);
+	SetEntProp(client, Prop_Send, "m_bIsScoped", 0);
+	SetEntProp(client, Prop_Send, "m_bResumeZoom", 0);
+
+	if(PlayerHasBanish[client] || PlayerHasFOV[client])
+	{
+		return Plugin_Continue;
+	}
+
+	SetEntProp(client, Prop_Send, "m_iFOV", 90);
+	SetEntProp(client, Prop_Send, "m_iDefaultFOV", 90);
+
+	return Plugin_Continue;
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////
 // Command - Setfx Reincarnation 													//
 // - Usage: wcs_setfx reincarnation <userid> <operator> <1 On / 0 Off> <time> 		//
 //////////////////////////////////////////////////////////////////////////////////////
@@ -2775,6 +3046,80 @@ public void GiveReincarnationItems(int client)
 		
 		PlayerHasReincarnation[client] = false;
 	}
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Command - Setfx RadarReveal 														//
+// - Usage: wcs_setfx radarreveal <userid> <operator> <1 On / 0 Off> <time> 		//
+//////////////////////////////////////////////////////////////////////////////////////
+
+
+public Action Command_SetfxRadarReveal(int args)
+{
+	char userid[128];
+	GetCmdArg(1, userid, sizeof(userid));
+	int client = StringToInt(userid);
+	client = GetClientOfUserId(client);
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	char operator_char[16];
+	GetCmdArg(2, operator_char, sizeof(operator_char));
+
+	if(!StrEqual(operator_char, "="))
+	{
+		PrintToServer("Command Syntax Error:");
+		PrintToServer("wcs_setfx radarreveal only supports the following operator: '='");
+		return Plugin_Continue;
+	}
+
+	char amount_char[16];
+	GetCmdArg(3, amount_char, sizeof(amount_char));
+	int amount = StringToInt(amount_char);
+	if(amount == 0)
+	{
+		PlayerHasRadarReveal[client] = false;
+
+		return Plugin_Continue;
+	}
+	else if(amount == 1)
+	{
+		PlayerHasRadarReveal[client] = true;
+	}
+	else
+	{
+		PrintToServer("Command Syntax Error:");
+		PrintToServer("wcs_setfx radarreveal only supports the following values: '0', '1'");
+		return Plugin_Continue;
+	}
+
+	char time_char[32];
+	GetCmdArg(4, time_char, sizeof(time_char));
+	float time = StringToFloat(time_char);
+	if(time > 0.00)
+	{
+		CreateTimer(time, Timer_RemoveSetfxRadarReveal, client, TIMER_FLAG_NO_MAPCHANGE);
+	}
+
+	return Plugin_Continue;
+}
+
+
+public Action Timer_RemoveSetfxRadarReveal(Handle timer, int client)
+{
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	PlayerHasRadarReveal[client] = false;
+
+	return Plugin_Continue;
 }
 
 
