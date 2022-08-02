@@ -1066,37 +1066,6 @@ public Action ResetAllEffects(int client)
 }
 
 
-public void DownloadAndPrecacheFiles()
-{
-	// Adds the following files to the download tables
-	AddFileToDownloadsTable("models/player/custom_player/legacy/backwards/furry_invisible.dx90.vtx");
-	AddFileToDownloadsTable("models/player/custom_player/legacy/backwards/furry_invisible.mdl");
-	AddFileToDownloadsTable("models/player/custom_player/legacy/backwards/furry_invisible.vvd");
-
-	// Precaches the model files which we intend to use
-	PrecacheModel("models/player/custom_player/legacy/backwards/furry_invisible.mdl");
-
-	PrecacheModel("models/weapons/ct_arms_idf.mdl");
-	PrecacheModel("models/player/ctm_idf_variantc.mdl");
-	
-	PrecacheModel("models/weapons/t_arms_phoenix.mdl");
-	PrecacheModel("models/player/custom_player/legacy/tm_phoenix_varianta.mdl");
-
-
-
-
-	/* Blackhole Content */
-	// Adds our custom material files to the download tables
-	AddFileToDownloadsTable("materials/sprites/water_drop.vmt");
-	AddFileToDownloadsTable("materials/sprites/water_drop.vtf");
-	AddFileToDownloadsTable("materials/sprites/splodesprite.vmt");
-	AddFileToDownloadsTable("materials/sprites/splodesprite.vmt");
-	
-	// Precaches our custom material files
-	SpriteSheet_Ring_BlackHole = PrecacheModel("sprites/water_drop.vmt");
-	SpriteSheet_Core_BlackHole = PrecacheModel("sprites/splodesprite.vmt");
-}
-
 
 public void ShakeScreen(int client, float intensity, float duration, float frequency)
 {
@@ -4447,3 +4416,407 @@ stock Entity_GetNextChild2(parent, start=0)
 }
 
 
+
+
+/////////////////////////////////////
+// - Downloading & Precachinging - //
+/////////////////////////////////////
+
+public void DownloadAndPrecacheFiles()
+{
+	// Used by the wcs_blackhole command
+	SpriteSheet_Ring_BlackHole = PrecacheModel("sprites/water_drop.vmt");
+	SpriteSheet_Core_BlackHole = PrecacheModel("sprites/splodesprite.vmt");
+
+
+	////////////////////////////////
+	// - Player Model Downloads - //
+	////////////////////////////////
+
+	AddFileToDownloadsTable("models/player/custom_player/legacy/backwards/furry_invisible.dx90.vtx");
+	AddFileToDownloadsTable("models/player/custom_player/legacy/backwards/furry_invisible.mdl");
+	AddFileToDownloadsTable("models/player/custom_player/legacy/backwards/furry_invisible.vvd");
+
+
+	/////////////////////////////////
+	// - Player Model Precaching - //
+	/////////////////////////////////
+
+	PrecacheModel("models/player/custom_player/legacy/backwards/furry_invisible.mdl");
+	PrecacheModel("models/player/ctm_idf_variantc.mdl");
+	PrecacheModel("models/player/custom_player/legacy/tm_phoenix_varianta.mdl");
+
+
+	/////////////////////////////////////
+	// - Player Arm Model Precaching - //
+	/////////////////////////////////////
+
+	PrecacheModel("models/weapons/ct_arms_idf.mdl");
+	PrecacheModel("models/weapons/t_arms_phoenix.mdl");
+
+
+	///////////////////////////////////
+	// - Effect Materials Download - //
+	///////////////////////////////////
+
+	AddFileToDownloadsTable("materials/effects/blueblackflash_v2.vmt");
+	AddFileToDownloadsTable("materials/effects/blueblackflash_v2.vtf");
+	AddFileToDownloadsTable("materials/effects/blueflare1.vmt");
+	AddFileToDownloadsTable("materials/effects/blueflare1.vtf");
+	AddFileToDownloadsTable("materials/effects/bluelaser1.vmt");
+	AddFileToDownloadsTable("materials/effects/bluelaser1.vtf");
+	AddFileToDownloadsTable("materials/effects/bluemuzzle.vmt");
+	AddFileToDownloadsTable("materials/effects/bluemuzzle.vtf");
+	AddFileToDownloadsTable("materials/effects/com_shield003a.vmt");
+	AddFileToDownloadsTable("materials/effects/combine_binocoverlay.vmt");
+	AddFileToDownloadsTable("materials/effects/combine_binocoverlay.vtf");
+	AddFileToDownloadsTable("materials/effects/combineshield/comshieldwall.vmt");
+	AddFileToDownloadsTable("materials/effects/combineshield/comshieldwall.vtf");
+	AddFileToDownloadsTable("materials/effects/combineshield/comshieldwall_close.vtf");
+	AddFileToDownloadsTable("materials/effects/fluttercore_v2.vmt");
+	AddFileToDownloadsTable("materials/effects/fluttercore_v2.vtf");
+	AddFileToDownloadsTable("materials/effects/mh_blood1.vmt");
+	AddFileToDownloadsTable("materials/effects/mh_blood1.vtf");
+	AddFileToDownloadsTable("materials/effects/mh_blood2.vmt");
+	AddFileToDownloadsTable("materials/effects/mh_blood2.vtf");
+	AddFileToDownloadsTable("materials/effects/mh_blood3.vmt");
+	AddFileToDownloadsTable("materials/effects/mh_blood3.vtf");
+	AddFileToDownloadsTable("materials/effects/redflare_v2.vmt");
+	AddFileToDownloadsTable("materials/effects/redflare_v2.vtf");
+	AddFileToDownloadsTable("materials/effects/rollerglow.vmt");
+	AddFileToDownloadsTable("materials/effects/rollerglow.vtf");
+	AddFileToDownloadsTable("materials/effects/strider_dark_flare.vmt");
+	AddFileToDownloadsTable("materials/effects/strider_dark_flare.vtf");
+	AddFileToDownloadsTable("materials/effects/strider_muzzle.vmt");
+	AddFileToDownloadsTable("materials/effects/strider_muzzle.vtf");
+	AddFileToDownloadsTable("materials/effects/stunstick.vmt");
+	AddFileToDownloadsTable("materials/effects/stunstick.vtf");
+	AddFileToDownloadsTable("materials/effects/tp_eyefx/2tpeyefx_.vtf");
+	AddFileToDownloadsTable("materials/effects/tp_eyefx/3tpeyefx_.vtf");
+	AddFileToDownloadsTable("materials/effects/tp_eyefx/tp_eyefx.vmt");
+	AddFileToDownloadsTable("materials/effects/tp_eyefx/tp_eyefx.vtf");
+	AddFileToDownloadsTable("materials/effects/tp_eyefx/tpeye.vmt");
+	AddFileToDownloadsTable("materials/effects/tp_eyefx/tpeye2.vmt");
+	AddFileToDownloadsTable("materials/effects/tp_eyefx/tpeye3.vmt");
+	AddFileToDownloadsTable("materials/effects/tp_eyefx/tpeye_.vtf");
+	
+	AddFileToDownloadsTable("materials/models/airboat/airboat_blur02.vmt");
+	AddFileToDownloadsTable("materials/models/airboat/airboat_blur02.vtf");
+	AddFileToDownloadsTable("materials/models/effects/comball_sphere.vmt");
+	AddFileToDownloadsTable("materials/models/effects/comball_sphere.vtf");
+	AddFileToDownloadsTable("materials/models/effects/comball_tape.vmt");
+	AddFileToDownloadsTable("materials/models/effects/comball_tape.vtf");
+	AddFileToDownloadsTable("materials/models/effects/splode1_sheet.vmt");
+	AddFileToDownloadsTable("materials/models/effects/splode1_sheet.vtf");
+	AddFileToDownloadsTable("materials/models/effects/splodecard2_sheet.vmt");
+	AddFileToDownloadsTable("materials/models/effects/splodecard2_sheet.vtf");
+	AddFileToDownloadsTable("materials/models/manhack/blur01.vmt");
+	AddFileToDownloadsTable("materials/models/manhack/blur01.vtf");
+	AddFileToDownloadsTable("materials/models/manhack/manhackblade001.vmt");
+	AddFileToDownloadsTable("materials/models/manhack/manhackblade001.vtf");
+	AddFileToDownloadsTable("materials/models/police/pupil_r.vmt");
+	AddFileToDownloadsTable("materials/models/police/pupil_r.vtf");
+	AddFileToDownloadsTable("materials/models/props_combine/masterinterface01c.vmt");
+	AddFileToDownloadsTable("materials/models/props_combine/masterinterface01c.vtf");
+	AddFileToDownloadsTable("materials/models/props_lab/cornerunit_cloud.vmt");
+	AddFileToDownloadsTable("materials/models/props_lab/cornerunit_cloud.vtf");
+	AddFileToDownloadsTable("materials/models/props_lab/teleportgate_fence.vmt");
+	AddFileToDownloadsTable("materials/models/props_lab/teleportgate_fence.vtf");
+	AddFileToDownloadsTable("materials/models/props_lab/warp_sheet.vmt");
+	AddFileToDownloadsTable("materials/models/props_lab/warp_sheet.vtf");
+
+	AddFileToDownloadsTable("materials/particle/fire.vmt");
+	AddFileToDownloadsTable("materials/particle/fire.vtf");
+	AddFileToDownloadsTable("materials/particle/smokesprites0199.vtf");
+	AddFileToDownloadsTable("materials/particle/smokesprites0793.vtf");
+	AddFileToDownloadsTable("materials/particle/smokesprites_0004.vmt");
+	AddFileToDownloadsTable("materials/particle/smokesprites_0013.vmt");
+
+	AddFileToDownloadsTable("materials/sprites/ar2_muzzle3_v2.vmt");
+	AddFileToDownloadsTable("materials/sprites/ar2_muzzle3_v2.vtf");
+	AddFileToDownloadsTable("materials/sprites/blackbeam.vmt");
+	AddFileToDownloadsTable("materials/sprites/blackbeam.vtf");
+	AddFileToDownloadsTable("materials/sprites/blueglow1.vmt");
+	AddFileToDownloadsTable("materials/sprites/blueglow1.vtf");
+	AddFileToDownloadsTable("materials/sprites/bluelaser1.vmt");
+	AddFileToDownloadsTable("materials/sprites/bluelaser1.vtf");
+	AddFileToDownloadsTable("materials/sprites/bluelight1.vmt");
+	AddFileToDownloadsTable("materials/sprites/bluelight1.vtf");
+	AddFileToDownloadsTable("materials/sprites/blueshaft1.vmt");
+	AddFileToDownloadsTable("materials/sprites/blueshaft1.vtf");
+	AddFileToDownloadsTable("materials/sprites/combineball_glow_blue_1.vmt");
+	AddFileToDownloadsTable("materials/sprites/combineball_glow_blue_1.vtf");
+	AddFileToDownloadsTable("materials/sprites/combineball_glow_red_1.vmt");
+	AddFileToDownloadsTable("materials/sprites/combineball_glow_red_1.vtf");
+	AddFileToDownloadsTable("materials/sprites/combineball_trail_blue_1.vmt");
+	AddFileToDownloadsTable("materials/sprites/combineball_trail_blue_1.vtf");
+	AddFileToDownloadsTable("materials/sprites/combineball_trail_red_1.vmt");
+	AddFileToDownloadsTable("materials/sprites/combineball_trail_red_1.vtf");
+	AddFileToDownloadsTable("materials/sprites/crystal_beam1.vmt");
+	AddFileToDownloadsTable("materials/sprites/crystal_beam1.vtf");
+	AddFileToDownloadsTable("materials/sprites/dot.vmt");
+	AddFileToDownloadsTable("materials/sprites/dot.vtf");
+	AddFileToDownloadsTable("materials/sprites/fire.vmt");
+	AddFileToDownloadsTable("materials/sprites/fire.vtf");
+	AddFileToDownloadsTable("materials/sprites/fire1.vmt");
+	AddFileToDownloadsTable("materials/sprites/fire2.vmt");
+	AddFileToDownloadsTable("materials/sprites/fireburst.vmt");
+	AddFileToDownloadsTable("materials/sprites/fireburst/stmu0.vtf");
+	AddFileToDownloadsTable("materials/sprites/flame01-.vtf");
+	AddFileToDownloadsTable("materials/sprites/flame01.vmt");
+	AddFileToDownloadsTable("materials/sprites/flamelet5.vmt");
+	AddFileToDownloadsTable("materials/sprites/flamelet5.vtf");
+	AddFileToDownloadsTable("materials/sprites/flames1/flame.vtf");
+	AddFileToDownloadsTable("materials/sprites/flames2/fire.vtf");
+	AddFileToDownloadsTable("materials/sprites/flare1.vmt");
+	AddFileToDownloadsTable("materials/sprites/flare1.vtf");
+	AddFileToDownloadsTable("materials/sprites/flatflame.vmt");
+	AddFileToDownloadsTable("materials/sprites/flatflame.vtf");
+	AddFileToDownloadsTable("materials/sprites/floorflame.vmt");
+	AddFileToDownloadsTable("materials/sprites/floorflame.vtf");
+	AddFileToDownloadsTable("materials/sprites/glow02.vmt");
+	AddFileToDownloadsTable("materials/sprites/glow02.vtf");
+	AddFileToDownloadsTable("materials/sprites/glow08.vmt");
+	AddFileToDownloadsTable("materials/sprites/glow08.vtf");
+	AddFileToDownloadsTable("materials/sprites/glow1.vmt");
+	AddFileToDownloadsTable("materials/sprites/glow1.vtf");
+	AddFileToDownloadsTable("materials/sprites/greenglow1.vmt");
+	AddFileToDownloadsTable("materials/sprites/greenglow1.vtf");
+	AddFileToDownloadsTable("materials/sprites/greenspit1.vmt");
+	AddFileToDownloadsTable("materials/sprites/greenspit1.vtf");
+	AddFileToDownloadsTable("materials/sprites/halo01.vmt");
+	AddFileToDownloadsTable("materials/sprites/halo01.vtf");
+	AddFileToDownloadsTable("materials/sprites/hydragutbeam.vmt");
+	AddFileToDownloadsTable("materials/sprites/hydragutbeam.vtf");
+	AddFileToDownloadsTable("materials/sprites/hydragutbeamcap.vmt");
+	AddFileToDownloadsTable("materials/sprites/hydragutbeamcap.vtf");
+	AddFileToDownloadsTable("materials/sprites/hydraspinalcord.vmt");
+	AddFileToDownloadsTable("materials/sprites/hydraspinalcord.vtf");
+	AddFileToDownloadsTable("materials/sprites/laser.vmt");
+	AddFileToDownloadsTable("materials/sprites/laser.vtf");
+	AddFileToDownloadsTable("materials/sprites/lgtning.vmt");
+	AddFileToDownloadsTable("materials/sprites/lgtning.vtf");
+	AddFileToDownloadsTable("materials/sprites/light_glow01.vmt");
+	AddFileToDownloadsTable("materials/sprites/light_glow01.vtf");
+	AddFileToDownloadsTable("materials/sprites/orangeflare1_v2.vmt");
+	AddFileToDownloadsTable("materials/sprites/orangeflare1_v2.vtf");
+	AddFileToDownloadsTable("materials/sprites/orangelight1_v2.vmt");
+	AddFileToDownloadsTable("materials/sprites/orangelight1_v2.vtf");
+	AddFileToDownloadsTable("materials/sprites/physcannon_bluecore1b_v2.vmt");
+	AddFileToDownloadsTable("materials/sprites/physcannon_bluecore1b_v2.vtf");
+	AddFileToDownloadsTable("materials/sprites/physcannon_blueflare1_v2.vmt");
+	AddFileToDownloadsTable("materials/sprites/physcannon_blueflare1_v2.vtf");
+	AddFileToDownloadsTable("materials/sprites/physcannon_bluelight1_v2.vmt");
+	AddFileToDownloadsTable("materials/sprites/physcannon_bluelight1_v2.vtf");
+	AddFileToDownloadsTable("materials/sprites/physcannon_bluelight1b_v2.vmt");
+	AddFileToDownloadsTable("materials/sprites/physcannon_bluelight1b_v2.vtf");
+	AddFileToDownloadsTable("materials/sprites/physring1-.vtf");
+	AddFileToDownloadsTable("materials/sprites/physring1.vmt");
+	AddFileToDownloadsTable("materials/sprites/plasma.vmt");
+	AddFileToDownloadsTable("materials/sprites/plasma.vtf");
+	AddFileToDownloadsTable("materials/sprites/plasma1.vmt");
+	AddFileToDownloadsTable("materials/sprites/plasmabeam.vmt");
+	AddFileToDownloadsTable("materials/sprites/plasmabeam.vtf");
+	AddFileToDownloadsTable("materials/sprites/plasmaember.vmt");
+	AddFileToDownloadsTable("materials/sprites/plasmaember.vtf");
+	AddFileToDownloadsTable("materials/sprites/plasmahalo.vmt");
+	AddFileToDownloadsTable("materials/sprites/plasmahalo.vtf");
+	AddFileToDownloadsTable("materials/sprites/redglow1.vmt");
+	AddFileToDownloadsTable("materials/sprites/redglow1.vtf");
+	AddFileToDownloadsTable("materials/sprites/redglow3.vmt");
+	AddFileToDownloadsTable("materials/sprites/redglow3.vtf");
+	AddFileToDownloadsTable("materials/sprites/redglow4.vmt");
+	AddFileToDownloadsTable("materials/sprites/redglow4.vtf");
+	AddFileToDownloadsTable("materials/sprites/reticle_v2.vmt");
+	AddFileToDownloadsTable("materials/sprites/reticle_v2.vtf");
+	AddFileToDownloadsTable("materials/sprites/scanner.vmt");
+	AddFileToDownloadsTable("materials/sprites/scanner.vtf");
+	AddFileToDownloadsTable("materials/sprites/scanner_bottom.vmt");
+	AddFileToDownloadsTable("materials/sprites/scanner_bottom.vtf");
+	AddFileToDownloadsTable("materials/sprites/shellchrome.vmt");
+	AddFileToDownloadsTable("materials/sprites/shellchrome.vtf");
+	AddFileToDownloadsTable("materials/sprites/splodesprite.vmt");
+	AddFileToDownloadsTable("materials/sprites/splodesprite.vtf");
+	AddFileToDownloadsTable("materials/sprites/sprite_fire01.vmt");
+	AddFileToDownloadsTable("materials/sprites/sprite_fire01_.vtf");
+	AddFileToDownloadsTable("materials/sprites/strider_blackball.vmt");
+	AddFileToDownloadsTable("materials/sprites/strider_blackball.vtf");
+	AddFileToDownloadsTable("materials/sprites/strider_bluebeam.vmt");
+	AddFileToDownloadsTable("materials/sprites/strider_bluebeam.vtf");
+	AddFileToDownloadsTable("materials/sprites/tp_beam001.vmt");
+	AddFileToDownloadsTable("materials/sprites/tp_beam001.vtf");
+	AddFileToDownloadsTable("materials/sprites/water_drop.vmt");
+	AddFileToDownloadsTable("materials/sprites/water_drop.vtf");
+	AddFileToDownloadsTable("materials/sprites/xbeam2.vmt");
+	AddFileToDownloadsTable("materials/sprites/xbeam2.vtf");
+	AddFileToDownloadsTable("materials/sprites/yellowglow1.vmt");
+	AddFileToDownloadsTable("materials/sprites/yellowglow1.vtf");
+
+
+	/////////////////////////////////////
+	// - Effect Materials Precaching - //
+	/////////////////////////////////////
+
+	PrecacheGeneric("materials/effects/combineshield/comshieldwall.vmt", true);
+	PrecacheGeneric("materials/effects/blueblackflash_v2.vmt", true);
+	PrecacheGeneric("materials/effects/blueflare1.vmt", true);
+	PrecacheGeneric("materials/effects/bluelaser1.vmt", true);
+	PrecacheGeneric("materials/effects/bluemuzzle.vmt", true);
+	PrecacheGeneric("materials/effects/com_shield003a.vmt", true);
+	PrecacheGeneric("materials/effects/combine_binocoverlay.vmt", true);
+	PrecacheGeneric("materials/effects/fluttercore_v2.vmt", true);
+	PrecacheGeneric("materials/effects/mh_blood1.vmt", true);
+	PrecacheGeneric("materials/effects/mh_blood2.vmt", true);
+	PrecacheGeneric("materials/effects/mh_blood3.vmt", true);
+	PrecacheGeneric("materials/effects/redflare_v2.vmt", true);
+	PrecacheGeneric("materials/effects/rollerglow.vmt", true);
+	PrecacheGeneric("materials/effects/strider_dark_flare.vmt", true);
+	PrecacheGeneric("materials/effects/strider_muzzle.vmt", true);
+	PrecacheGeneric("materials/effects/stunstick.vmt", true);
+	PrecacheGeneric("materials/effects/tp_eyefx/tp_eyefx.vmt", true);
+	PrecacheGeneric("materials/effects/tp_eyefx/tpeye.vmt", true);
+	PrecacheGeneric("materials/effects/tp_eyefx/tpeye2.vmt", true);
+	PrecacheGeneric("materials/effects/tp_eyefx/tpeye3.vmt", true);
+
+	PrecacheGeneric("materials/models/airboat/airboat_blur02.vmt", true);
+	PrecacheGeneric("materials/models/effects/comball_sphere.vmt", true);
+	PrecacheGeneric("materials/models/effects/comball_tape.vmt", true);
+	PrecacheGeneric("materials/models/effects/splode1_sheet.vmt", true);
+	PrecacheGeneric("materials/models/effects/splodecard2_sheet.vmt", true);
+	PrecacheGeneric("materials/models/manhack/blur01.vmt", true);
+	PrecacheGeneric("materials/models/manhack/manhackblade001.vmt", true);
+	PrecacheGeneric("materials/models/police/pupil_r.vmt", true);
+	PrecacheGeneric("materials/models/props_combine/masterinterface01c.vmt", true);
+	PrecacheGeneric("materials/models/props_lab/cornerunit_cloud.vmt", true);
+	PrecacheGeneric("materials/models/props_lab/teleportgate_fence.vmt", true);
+	PrecacheGeneric("materials/models/props_lab/warp_sheet.vmt", true);
+
+	PrecacheGeneric("materials/particle/fire.vmt", true);
+	PrecacheGeneric("materials/particle/smokesprites_0004.vmt", true);
+	PrecacheGeneric("materials/particle/smokesprites_0013.vmt", true);
+
+	PrecacheGeneric("materials/sprites/ar2_muzzle3_v2.vmt", true);
+	PrecacheGeneric("materials/sprites/blackbeam.vmt", true);
+	PrecacheGeneric("materials/sprites/blueglow1.vmt", true);
+	PrecacheGeneric("materials/sprites/bluelaser1.vmt", true);
+	PrecacheGeneric("materials/sprites/bluelight1.vmt", true);
+	PrecacheGeneric("materials/sprites/blueshaft1.vmt", true);
+	PrecacheGeneric("materials/sprites/combineball_glow_blue_1.vmt", true);
+	PrecacheGeneric("materials/sprites/combineball_glow_red_1.vmt", true);
+	PrecacheGeneric("materials/sprites/combineball_trail_blue_1.vmt", true);
+	PrecacheGeneric("materials/sprites/combineball_trail_red_1.vmt", true);
+	PrecacheGeneric("materials/sprites/crystal_beam1.vmt", true);
+	PrecacheGeneric("materials/sprites/dot.vmt", true);
+	PrecacheGeneric("materials/sprites/fire.vmt", true);
+	PrecacheGeneric("materials/sprites/fire1.vmt", true);
+	PrecacheGeneric("materials/sprites/fire2.vmt", true);
+	PrecacheGeneric("materials/sprites/fireburst.vmt", true);
+	PrecacheGeneric("materials/sprites/flame01.vmt", true);
+	PrecacheGeneric("materials/sprites/flamelet5.vmt", true);
+	PrecacheGeneric("materials/sprites/flare1.vmt", true);
+	PrecacheGeneric("materials/sprites/flatflame.vmt", true);
+	PrecacheGeneric("materials/sprites/floorflame.vmt", true);
+	PrecacheGeneric("materials/sprites/glow02.vmt", true);
+	PrecacheGeneric("materials/sprites/glow08.vmt", true);
+	PrecacheGeneric("materials/sprites/glow1.vmt", true);
+	PrecacheGeneric("materials/sprites/greenglow1.vmt", true);
+	PrecacheGeneric("materials/sprites/greenspit1.vmt", true);
+	PrecacheGeneric("materials/sprites/halo01.vmt", true);
+	PrecacheGeneric("materials/sprites/hydragutbeam.vmt", true);
+	PrecacheGeneric("materials/sprites/hydragutbeamcap.vmt", true);
+	PrecacheGeneric("materials/sprites/hydraspinalcord.vmt", true);
+	PrecacheGeneric("materials/sprites/laser.vmt", true);
+	PrecacheGeneric("materials/sprites/lgtning.vmt", true);
+	PrecacheGeneric("materials/sprites/light_glow01.vmt", true);
+	PrecacheGeneric("materials/sprites/orangeflare1_v2.vmt", true);
+	PrecacheGeneric("materials/sprites/orangelight1_v2.vmt", true);
+	PrecacheGeneric("materials/sprites/physcannon_bluecore1b_v2.vmt", true);
+	PrecacheGeneric("materials/sprites/physcannon_blueflare1_v2.vmt", true);
+	PrecacheGeneric("materials/sprites/physcannon_bluelight1_v2.vmt", true);
+	PrecacheGeneric("materials/sprites/physcannon_bluelight1b_v2.vmt", true);
+	PrecacheGeneric("materials/sprites/physring1.vmt", true);
+	PrecacheGeneric("materials/sprites/plasma.vmt", true);
+	PrecacheGeneric("materials/sprites/plasma1.vmt", true);
+	PrecacheGeneric("materials/sprites/plasmabeam.vmt", true);
+	PrecacheGeneric("materials/sprites/plasmaember.vmt", true);
+	PrecacheGeneric("materials/sprites/plasmahalo.vmt", true);
+	PrecacheGeneric("materials/sprites/redglow1.vmt", true);
+	PrecacheGeneric("materials/sprites/redglow3.vmt", true);
+	PrecacheGeneric("materials/sprites/redglow4.vmt", true);
+	PrecacheGeneric("materials/sprites/reticle_v2.vmt", true);
+	PrecacheGeneric("materials/sprites/scanner.vmt", true);
+	PrecacheGeneric("materials/sprites/scanner_bottom.vmt", true);
+	PrecacheGeneric("materials/sprites/shellchrome.vmt", true);
+	PrecacheGeneric("materials/sprites/splodesprite.vmt", true);
+	PrecacheGeneric("materials/sprites/sprite_fire01.vmt", true);
+	PrecacheGeneric("materials/sprites/strider_blackball.vmt", true);
+	PrecacheGeneric("materials/sprites/strider_bluebeam.vmt", true);
+	PrecacheGeneric("materials/sprites/tp_beam001.vmt", true);
+	PrecacheGeneric("materials/sprites/xbeam2.vmt", true);
+	PrecacheGeneric("materials/sprites/yellowglow1.vmt", true);
+	PrecacheGeneric("materials/sprites/water_drop.vmt", true);
+
+
+	////////////////////////
+	// - Sound Download - //
+	////////////////////////
+
+	AddFileToDownloadsTable("sound/skills/breathfire.mp3");
+	AddFileToDownloadsTable("sound/skills/frostbolt.mp3");
+	AddFileToDownloadsTable("sound/skills/hymn.mp3");
+	AddFileToDownloadsTable("sound/skills/stancehealmonk.mp3");
+
+	AddFileToDownloadsTable("sound/wcs/clearcast.mp3");
+	AddFileToDownloadsTable("sound/wcs/defiance.mp3");
+	AddFileToDownloadsTable("sound/wcs/divine.mp3");
+	AddFileToDownloadsTable("sound/wcs/execute.mp3");
+	AddFileToDownloadsTable("sound/wcs/firecast.mp3");
+	AddFileToDownloadsTable("sound/wcs/fireloop.mp3");
+	AddFileToDownloadsTable("sound/wcs/heal.mp3");
+	AddFileToDownloadsTable("sound/wcs/invisibility.mp3");
+	AddFileToDownloadsTable("sound/wcs/levelup.mp3");
+	AddFileToDownloadsTable("sound/wcs/lightning.mp3");
+	AddFileToDownloadsTable("sound/wcs/mole.mp3");
+	AddFileToDownloadsTable("sound/wcs/resurrect.mp3");
+	AddFileToDownloadsTable("sound/wcs/root.mp3");
+	AddFileToDownloadsTable("sound/wcs/shadow.mp3");
+	AddFileToDownloadsTable("sound/wcs/shamanisticrage.mp3");
+	AddFileToDownloadsTable("sound/wcs/speed.mp3");
+	AddFileToDownloadsTable("sound/wcs/teleport.mp3");
+	AddFileToDownloadsTable("sound/wcs/tidetotem.mp3");
+	AddFileToDownloadsTable("sound/wcs/tomes.mp3");
+	AddFileToDownloadsTable("sound/wcs/vampiricstrike.mp3");
+	AddFileToDownloadsTable("sound/wcs/zeal.mp3");
+
+
+	//////////////////////////
+	// - Sound Precaching - //
+	//////////////////////////
+
+	PrecacheSound("sound/skills/breathfire.mp3", true);
+	PrecacheSound("sound/skills/frostbolt.mp3", true);
+	PrecacheSound("sound/skills/hymn.mp3", true);
+	PrecacheSound("sound/skills/stancehealmonk.mp3", true);
+	
+	PrecacheSound("sound/wcs/clearcast.mp3", true);
+	PrecacheSound("sound/wcs/defiance.mp3", true);
+	PrecacheSound("sound/wcs/divine.mp3", true);
+	PrecacheSound("sound/wcs/execute.mp3", true);
+	PrecacheSound("sound/wcs/firecast.mp3", true);
+	PrecacheSound("sound/wcs/fireloop.mp3", true);
+	PrecacheSound("sound/wcs/heal.mp3", true);
+	PrecacheSound("sound/wcs/invisibility.mp3", true);
+	PrecacheSound("sound/wcs/levelup.mp3", true);
+	PrecacheSound("sound/wcs/lightning.mp3", true);
+	PrecacheSound("sound/wcs/mole.mp3", true);
+	PrecacheSound("sound/wcs/resurrect.mp3", true);
+	PrecacheSound("sound/wcs/root.mp3", true);
+	PrecacheSound("sound/wcs/shadow.mp3", true);
+	PrecacheSound("sound/wcs/shamanisticrage.mp3", true);
+	PrecacheSound("sound/wcs/speed.mp3", true);
+	PrecacheSound("sound/wcs/teleport.mp3", true);
+	PrecacheSound("sound/wcs/tidetotem.mp3", true);
+	PrecacheSound("sound/wcs/tomes.mp3", true);
+	PrecacheSound("sound/wcs/vampiricstrike.mp3", true);
+	PrecacheSound("sound/wcs/zeal.mp3", true);
+}
