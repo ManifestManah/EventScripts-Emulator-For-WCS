@@ -15,6 +15,7 @@ block load
 
 	//Don't edit anything below these lines unless you know exactly what you are doing!
 	//Sets all the variables that we are going to use in races' skills - normally you should not do it this way, you should use the var.txt found at cfg/source-python/wcs/var.txt
+	es_xset wcs_distance 0
 	es_xset wcs_ffa_userid 0
 	es_xset wcs_execute_ultimate_ffa 0
 	es_xset wcs_phoenix_ffa 0
