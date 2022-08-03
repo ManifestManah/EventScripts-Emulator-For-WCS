@@ -71,11 +71,14 @@ bool ReincarnationItemKevlarHelmet[MAXPLAYERS + 1] = {false,...};
 
 // Global Integers (Checks)
 int PlayerHasAbsorptionShield[MAXPLAYERS + 1] = {0, ...};
+int PlayerHasCrouchInvisibility[MAXPLAYERS + 1] = {0, ...};
 int PlayerHasFlicker[MAXPLAYERS + 1] = {0, ...};
 int PlayerHasHealthDecay[MAXPLAYERS + 1] = {0, ...};
 int PlayerHasFOV[MAXPLAYERS + 1] = {0, ...};
 int PlayerHasPoisonSmokes[MAXPLAYERS + 1] = {0, ...};
 int PlayerHasPropModel[MAXPLAYERS + 1] = {-1, ...};
+
+
 
 // Global Integers (Functionality)
 int LastButtonsPressed[MAXPLAYERS + 1] = {0, ...};
@@ -114,6 +117,7 @@ public void OnPluginStart()
 	RegServerCmd("wcs_caller_setfxbanish", Command_SetfxBanish);
 	RegServerCmd("wcs_caller_setfxblur", Command_SetfxBlur);
 	RegServerCmd("wcs_caller_setfxbodyshotimmunity", Command_SetfxBodyshotImmunity);
+	RegServerCmd("wcs_caller_setfxcrouchinvisibility", Command_SetfxCrouchInvisibility);
 	RegServerCmd("wcs_caller_setfxdrunk", Command_SetfxDrunk);
 	RegServerCmd("wcs_caller_setfxdrug", Command_SetfxDrug);
 	RegServerCmd("wcs_caller_setfxfalldamage", Command_SetfxFallDamage);
@@ -137,8 +141,6 @@ public void OnPluginStart()
 	
 
 
-
-//	RegServerCmd("wcs_caller_crouchinvisibility", Command_SetfxCrouchInvisibility);
 
 
 	///////////////////////////
@@ -1002,6 +1004,12 @@ public Action ResetAllEffects(int client)
 		ClientCommand(client, "r_screenoverlay 0");
 	}
 
+	// Crouching Invisibility
+	if(PlayerHasCrouchInvisibility[client])
+	{
+		PlayerHasCrouchInvisibility[client] = 0;
+	}
+
 	// Bodyshot Immunity
 	if(PlayerHasBodyshotImmunity[client])
 	{
@@ -1505,6 +1513,81 @@ public Action Timer_ApplyBlurEffect(Handle timer, int client)
 	return Plugin_Continue;
 }
 */
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Command - Setfx CrouchInvisibility													//
+// - Usage: wcs_setfx absorptionshield <userid> <operator> <Amount / 0 Off> <time> 	//
+//////////////////////////////////////////////////////////////////////////////////////
+
+
+public Action Command_SetfxCrouchInvisibility(int args)
+{
+	char userid[128];
+	GetCmdArg(1, userid, sizeof(userid));
+	int client = StringToInt(userid);
+	client = GetClientOfUserId(client);
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	char operator_char[16];
+	GetCmdArg(2, operator_char, sizeof(operator_char));
+
+	if(!StrEqual(operator_char, "="))
+	{
+		PrintToServer("Command Syntax Error:");
+		PrintToServer("wcs_setfx crouchinvisibility only supports the following operator: '='");
+		return Plugin_Continue;
+	}
+
+	char amount_char[16];
+	GetCmdArg(3, amount_char, sizeof(amount_char));
+	int amount = StringToInt(amount_char);
+	if(amount == 0)
+	{
+		PlayerHasCrouchInvisibility[client] = 0;
+		return Plugin_Continue;
+	}
+	else if(amount >= 1 && amount <= 255)
+	{
+		PlayerHasCrouchInvisibility[client] = amount;
+	}
+	else
+	{
+		PrintToServer("Command Syntax Error:");
+		PrintToServer("wcs_setfx crouchinvisibility only supports '0' and positive integer values up to 255");
+		return Plugin_Continue;
+	}
+
+	char time_char[32];
+	GetCmdArg(4, time_char, sizeof(time_char));
+	float time = StringToFloat(time_char);
+	if(time > 0.00)
+	{
+		CreateTimer(time, Timer_RemoveSetfxCrouchInvisibility, client, TIMER_FLAG_NO_MAPCHANGE);
+	}
+
+	return Plugin_Continue;
+}
+
+
+public Action Timer_RemoveSetfxCrouchInvisibility(Handle timer, int client)
+{
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	PlayerHasCrouchInvisibility[client] = 0;
+
+	return Plugin_Continue;
+}
+
+
+
 
 
 
@@ -3548,8 +3631,38 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float veloc
 		LastButtonsPressed[client] = buttons;
 	}
 
+
+	// Crouching Invisibility
+	if(PlayerHasCrouchInvisibility[client])
+	{
+		if(buttons & IN_DUCK)
+		{
+			if(GetEntityFlags(client) & FL_ONGROUND)
+			{
+				SetEntityRenderMode(client, RENDER_TRANSALPHA);
+				Entity_SetRenderColor(client, 255, 255, 255, PlayerHasCrouchInvisibility[client]);
+
+				return Plugin_Continue;				
+			}
+			else
+			{
+				Entity_SetRenderColor(client, 255, 255, 255, 255);
+
+				return Plugin_Continue;
+			}
+		}
+		else
+		{
+			Entity_SetRenderColor(client, 255, 255, 255, 255);
+
+			return Plugin_Continue;
+		}
+	}
+
 	return Plugin_Continue;
 }
+
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////
