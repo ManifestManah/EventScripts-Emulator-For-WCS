@@ -170,6 +170,7 @@ public void OnPluginStart()
 	// - Sticky Grenades
 	// - Impact Explosion Grenades
 	// - Est_Rocket
+	// - CrouchInvisibilityFrozen
 	
 	// Commands
 	// - Eye Laser
@@ -195,14 +196,6 @@ public void OnPluginStart()
 	// - 
 
 
-	// Aura Module
-	// - Slow
-	// - Damage
-	// - Paranoia (Vision alteration)
-	// - Shake
-	// - 
-
-
 
 
 	// Hooks the events we plan on using
@@ -216,6 +209,9 @@ public void OnPluginStart()
 	HookEvent("smokegrenade_detonate", Event_SmokeGrenadeDetonate, EventHookMode_Post);
 	HookEvent("weapon_zoom", Event_WeaponZoom, EventHookMode_Post);
 
+
+
+	HookEvent("weapon_fire", Event_WeaponFire, EventHookMode_Pre);
 
 	// Calls upon our function named DownloadAndPrecacheFiles
 	DownloadAndPrecacheFiles();
@@ -231,6 +227,56 @@ public void OnPluginStart()
 			ResetAllEffects(client);
 		}
 	}
+}
+
+
+
+
+
+
+// This section is executed everytime the player fires a weapon or left attacks with his knife
+public Action Event_WeaponFire(Handle event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	CreateTimer(0.0, Timer_AutoMaticPistols, client, TIMER_FLAG_NO_MAPCHANGE);
+
+	return Plugin_Continue;
+}
+
+
+
+public Action Timer_AutoMaticPistols(Handle timer, int client)
+{
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	int weaponEntity = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+
+	if(!IsValidEntity(weaponEntity))
+	{
+		return Plugin_Continue;
+	}
+
+	char weaponClassName[32];
+
+	GetEntityClassname(weaponEntity, weaponClassName, sizeof(weaponClassName));
+
+	if(StrEqual(weaponClassName, "weapon_cz75a", false) || StrEqual(weaponClassName, "weapon_deagle", false) || StrEqual(weaponClassName, "weapon_elite", false) || StrEqual(weaponClassName, "weapon_fiveseven", false) || StrEqual(weaponClassName, "weapon_glock", false) || StrEqual(weaponClassName, "weapon_hkp2000", false) || StrEqual(weaponClassName, "weapon_p250", false) || StrEqual(weaponClassName, "weapon_revolver", false) || StrEqual(weaponClassName, "weapon_tec9", false) || StrEqual(weaponClassName, "weapon_usp_silencer", false))
+	{
+		SetEntPropFloat(client, Prop_Send, "m_flNextAttack", 0.0);
+
+		SetEntProp(client, Prop_Send, "m_iShotsFired", 0);
+	}
+
+	return Plugin_Continue;
 }
 
 
@@ -2116,7 +2162,7 @@ enum RenderFx
 //	RENDERFX_GLOWSHELL,			/**< Glowing Shell */
 //	RENDERFX_CLAMP_MIN_SCALE,	/**< Keep this sprite from getting very small (SPRITES only!) */
 //	RENDERFX_ENV_RAIN,			/**< for environmental rendermode, make rain */
-//	RENDERFX_ENV_SNOW,			/**<  "        "            "    , make snow */
+//	RENDERFX_ENV_SNOW,			/**<  "		"			"	, make snow */
 //	RENDERFX_SPOTLIGHT,			/**< TEST CODE for experimental spotlight */
 //	RENDERFX_RAGDOLL,			/**< HACKHACK: TEST CODE for signalling death of a ragdoll character */
 //	RENDERFX_PULSE_FAST_WIDER,
@@ -3630,10 +3676,19 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float veloc
 	}
 
 
-	// Crouching Invisibility
-	if(PlayerHasCrouchInvisibility[client])
+
+	if(buttons & IN_DUCK)
 	{
-		if(buttons & IN_DUCK)
+		int userid = GetClientUserId(client);
+
+		char ServerCommandMessage[128];
+
+		FormatEx(ServerCommandMessage, sizeof(ServerCommandMessage), "es wcsgroup set is_ducking %i 1", userid);
+
+		ServerCommand(ServerCommandMessage);
+
+		// Crouching Invisibility
+		if(PlayerHasCrouchInvisibility[client])
 		{
 			if(GetEntityFlags(client) & FL_ONGROUND)
 			{
@@ -3649,13 +3704,31 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float veloc
 				return Plugin_Continue;
 			}
 		}
-		else
+	}
+	else
+	{
+		int userid = GetClientUserId(client);
+
+		char ServerCommandMessage[128];
+
+		FormatEx(ServerCommandMessage, sizeof(ServerCommandMessage), "es wcsgroup set is_ducking %i 0", userid);
+
+		ServerCommand(ServerCommandMessage);
+
+		// Crouching Invisibility
+		if(PlayerHasCrouchInvisibility[client])
 		{
 			Entity_SetRenderColor(client, 255, 255, 255, 255);
 
 			return Plugin_Continue;
 		}
 	}
+
+
+
+
+
+	
 
 	return Plugin_Continue;
 }
