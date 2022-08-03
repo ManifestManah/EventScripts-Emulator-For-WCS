@@ -30,14 +30,11 @@ public Plugin myinfo =
 
 
 /* - Improvements
-- Add a Min & Max for the healing gun
-
 - Configure the damage dealing reduction or players who are in noclip mode
 
 - Configuration to not pull weapons (C4) in to the black holes
 - Configuration to not pull anything aside from players in to the black holes
 */ 
-
 
 
 
@@ -60,7 +57,6 @@ bool PlayerHasReversedMovement[MAXPLAYERS + 1] = { false, ... };
 bool PlayerHasReincarnation[MAXPLAYERS + 1] = { false, ... };
 bool PlayerHasThirdPerson[MAXPLAYERS + 1] = {false,...};
 
-
 // Global Booleans (Functionality)
 bool PlayerHasTeleportDeathImmunity[MAXPLAYERS + 1] = {false,...};
 bool PlayerDoubleJumped[MAXPLAYERS + 1] = {false,...};
@@ -77,7 +73,9 @@ int PlayerHasHealthDecay[MAXPLAYERS + 1] = {0, ...};
 int PlayerHasFOV[MAXPLAYERS + 1] = {0, ...};
 int PlayerHasPoisonSmokes[MAXPLAYERS + 1] = {0, ...};
 int PlayerHasPropModel[MAXPLAYERS + 1] = {-1, ...};
-
+int PlayerHasHealingGunMinHeal[MAXPLAYERS + 1] = {-1, ...};
+int PlayerHasHealingGunMaxHeal[MAXPLAYERS + 1] = {-1, ...};
+int PlayerHasHealingGunHealCap[MAXPLAYERS + 1] = {-1, ...};
 
 
 // Global Integers (Functionality)
@@ -95,7 +93,7 @@ int SpriteSheet_Core_BlackHole = 0;
 float PlayerHasFallDamageReduction[MAXPLAYERS + 1] = {0.0};
 float PlayerHasHeadshotImmunity[MAXPLAYERS + 1] = {0.0,...};
 float PlayerHasBodyshotImmunity[MAXPLAYERS + 1] = {0.0,...};
-
+float PlayerHasHealingGunDamageReduction[MAXPLAYERS + 1] = {0.0,...};
 
 // Global Char (functionality)
 char ReincarnationWeaponPrimary[MAXPLAYERS + 1][64];
@@ -142,7 +140,6 @@ public void OnPluginStart()
 
 
 
-
 	///////////////////////////
 	// - Commands : Normal - //
 	///////////////////////////
@@ -170,7 +167,6 @@ public void OnPluginStart()
 	// - Rocket Jump
 	// - Undying <userid> <duration>
 	// - Grapple Hook
-	// - Crouch Invisibility
 	// - Sticky Grenades
 	// - Impact Explosion Grenades
 	// - Est_Rocket
@@ -183,11 +179,11 @@ public void OnPluginStart()
 	// - Telekinesis
 	// - Portals
 
-	// - ScoreboardKill
-	// - ScoreboardDeath
 	// - ScoreboardAssist
 	// - ScoreboardContribution
-	// - Scoreboard
+	// - ScoreboardDeath
+	// - ScoreboardKill
+	// - ScoreboardMVP
 
 	// Particle Tools
 	// - Particle On Player
@@ -746,17 +742,19 @@ public Action Event_OnDamageTaken(int client, int &attacker, int &inflictor, flo
 		return Plugin_Continue;
 	}
 
-
 	// Healing Gun
 	if(PlayerHasHealingGun[attacker])
 	{
 		if(GetClientTeam(attacker) == GetClientTeam(client))
 		{
-			int RandomHealValue = GetRandomInt(2, 10);
+			int MinValue = PlayerHasHealingGunMinHeal[attacker];
+			int MaxValue = PlayerHasHealingGunMaxHeal[attacker];
+
+			int RandomHealValue = GetRandomInt(MinValue, MaxValue);
 
 			int PlayerHealth = GetClientHealth(client) + RandomHealValue;
 
-			if ((PlayerHealth) <= 150)
+			if ((PlayerHealth) <= PlayerHasHealingGunHealCap[attacker])
 			{
 				SetEntProp(client, Prop_Data, "m_iMaxHealth", PlayerHealth);
 				SetEntityHealth(client, PlayerHealth);
@@ -766,8 +764,8 @@ public Action Event_OnDamageTaken(int client, int &attacker, int &inflictor, flo
 			}
 			else 
 			{
-				SetEntProp(client, Prop_Data, "m_iMaxHealth", 150);
-				SetEntityHealth(client, 150);
+				SetEntProp(client, Prop_Data, "m_iMaxHealth", PlayerHasHealingGunHealCap[attacker]);
+				SetEntityHealth(client, PlayerHasHealingGunHealCap[attacker]);
 
 				PrintToChat(client, "Your teammate tried to heal you, but you are at maximum health!", RandomHealValue);
 				PrintToChat(attacker, "Your teammate is already at maximum health!", RandomHealValue);
@@ -775,7 +773,7 @@ public Action Event_OnDamageTaken(int client, int &attacker, int &inflictor, flo
 		}
 		else
 		{
-			damage = damage / 2;
+			damage = damage * PlayerHasHealingGunDamageReduction[attacker];
 
 			RoundFloat(damage);
 
@@ -4165,24 +4163,95 @@ public Action Command_HealingGun(int args)
 	// If the player meets our criteria for validation then execute this section
 	if(IsValidClient(client))
 	{
-		char amount_char[128];
-
+		char amount_char[16];
 		GetCmdArg(2, amount_char, sizeof(amount_char));
-
-		// Converts the string to an integer and store that within the variable amount
 		int amount = StringToInt(amount_char);
-
-		if(amount != 1)
+		if(amount <= 0)
 		{
-			// Removes the player's Bodyshot immunity status
 			PlayerHasHealingGun[client] = false;
+			return Plugin_Continue;
+		}
+
+
+		char capamount_char[16];
+		GetCmdArg(3, capamount_char, sizeof(capamount_char));
+		int healcapamount = StringToInt(capamount_char);
+		if(healcapamount == 0)
+		{
+			PlayerHasHealingGunHealCap[client] = 0;
+		}
+		else if(healcapamount >= 1)
+		{
+			PlayerHasHealingGunHealCap[client] = healcapamount;
 		}
 		else
 		{
-			// Enables the player's Bodyshot immunity status
-			PlayerHasHealingGun[client] = true;
+			PrintToServer("Command Syntax Error:");
+			PrintToServer("wcs_healinggun healcap value only supports '0' and positive integer values");
+			return Plugin_Continue;
 		}
+
+
+		char minamount_char[16];
+		GetCmdArg(4, minamount_char, sizeof(minamount_char));
+		int minhealamount = StringToInt(minamount_char);
+		if(minhealamount == 0)
+		{
+			PlayerHasHealingGunMinHeal[client] = 0;
+		}
+		else if(minhealamount >= 1)
+		{
+			PlayerHasHealingGunMinHeal[client] = minhealamount;
+		}
+		else
+		{
+			PrintToServer("Command Syntax Error:");
+			PrintToServer("wcs_healinggun minheal value only supports '0' and positive integer values");
+			return Plugin_Continue;
+		}
+
+
+		char maxamount_char[16];
+		GetCmdArg(5, maxamount_char, sizeof(maxamount_char));
+		int maxhealamount = StringToInt(maxamount_char);
+		if(maxhealamount == 0)
+		{
+			PlayerHasHealingGunMaxHeal[client] = 0;
+		}
+		else if(maxhealamount >= 1)
+		{
+			PlayerHasHealingGunMaxHeal[client] = maxhealamount;
+		}
+		else
+		{
+			PrintToServer("Command Syntax Error:");
+			PrintToServer("wcs_healinggun maxheal value only supports '0' and positive integer values");
+			return Plugin_Continue;
+		}
+
+
+		char damagereductionamount_char[16];
+		GetCmdArg(6, damagereductionamount_char, sizeof(damagereductionamount_char));
+		float damagereductionamount = StringToFloat(damagereductionamount_char);
+		if(damagereductionamount <= 0.0)
+		{
+			PlayerHasHealingGunDamageReduction[client] = 0.00;
+		}
+		if(damagereductionamount > 0.00)
+		{
+			PlayerHasHealingGunDamageReduction[client] = damagereductionamount;
+		}
+		else
+		{
+			PrintToServer("Command Syntax Error:");
+			PrintToServer("wcs_healinggun enemydamage only supports the following range of values: '0.00' to '1.00'");
+			return Plugin_Continue;
+		}
+
+		PlayerHasHealingGun[client] = true;
 	}
+
+	return Plugin_Continue;
 }
 
 
