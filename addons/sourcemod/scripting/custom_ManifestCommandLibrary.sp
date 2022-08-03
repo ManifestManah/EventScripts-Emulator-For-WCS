@@ -39,6 +39,7 @@ public Plugin myinfo =
 
 
 // Global Booleans (Checks)
+bool PlayerHasAutomaticPistols[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasBanish[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasBlur[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasDoubleJump[MAXPLAYERS + 1] = {false,...};
@@ -46,6 +47,7 @@ bool PlayerHasDrug[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasDrunk[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasHealingGun[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasNoClip[MAXPLAYERS + 1] = {false,...};
+bool PlayerHasNoRecoil[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasNoScope[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasQuickDefuse[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasQuickExplode[MAXPLAYERS + 1] = {false,...};
@@ -56,6 +58,7 @@ bool PlayerHasRadarReveal[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasReversedMovement[MAXPLAYERS + 1] = { false, ... };
 bool PlayerHasReincarnation[MAXPLAYERS + 1] = { false, ... };
 bool PlayerHasThirdPerson[MAXPLAYERS + 1] = {false,...};
+
 
 // Global Booleans (Functionality)
 bool PlayerHasTeleportDeathImmunity[MAXPLAYERS + 1] = {false,...};
@@ -104,14 +107,28 @@ char ReincarnationWeaponSecondary[MAXPLAYERS + 1][64];
 Handle Timer_ManageExplosiveBarrel;
 
 
+// Global Convars
+ConVar cvar_AccuracyNoSpread;
+ConVar cvar_RecoilScale;
+
+
+
 public void OnPluginStart()
 {
+	cvar_AccuracyNoSpread = FindConVar("weapon_accuracy_nospread");
+	cvar_RecoilScale = FindConVar("weapon_recoil_scale");
+
+
+
+
+
 	//////////////////////////
 	// - Commands : Setfx - //
 	//////////////////////////
 
 	// Setfx like commands
 	RegServerCmd("wcs_caller_setfxabsorptionshield", Command_SetfxAbsorptionShield);
+	RegServerCmd("wcs_caller_setfxautomaticpistols", Command_SetfxAutomaticPistols);
 	RegServerCmd("wcs_caller_setfxbanish", Command_SetfxBanish);
 	RegServerCmd("wcs_caller_setfxblur", Command_SetfxBlur);
 	RegServerCmd("wcs_caller_setfxbodyshotimmunity", Command_SetfxBodyshotImmunity);
@@ -125,6 +142,7 @@ public void OnPluginStart()
 	RegServerCmd("wcs_caller_setfxheadshotimmunity", Command_SetfxHeadshotImmunity);
 	RegServerCmd("wcs_caller_setfxhealthdecay", Command_SetfxHealthDecay);
 	RegServerCmd("wcs_caller_setfxnoclip", Command_SetfxNoClip);
+	RegServerCmd("wcs_caller_setfxnorecoilsm", Command_SetfxNoRecoil);
 	RegServerCmd("wcs_caller_setfxnoscope", Command_SetfxNoScope);
 	RegServerCmd("wcs_caller_setfxplantbombanywhere", Command_PlantBombAnywhere);
 	RegServerCmd("wcs_caller_setfxparalyze", Command_SetfxParalyze);
@@ -137,7 +155,6 @@ public void OnPluginStart()
 	RegServerCmd("wcs_caller_setfxreversemovement", Command_SetfxReverseMovement);
 	RegServerCmd("wcs_caller_setfxthirdperson", Command_SetfxThirdPerson);
 	
-
 
 
 	///////////////////////////
@@ -196,8 +213,6 @@ public void OnPluginStart()
 	// - 
 
 
-
-
 	// Hooks the events we plan on using
 	HookEvent("player_death", Event_PlayerDeath, EventHookMode_Post);
 	HookEvent("player_spawn", Event_PlayerSpawn, EventHookMode_Post);
@@ -208,9 +223,6 @@ public void OnPluginStart()
 	HookEvent("bomb_begindefuse", Event_BombBeginDefuse, EventHookMode_Post);	
 	HookEvent("smokegrenade_detonate", Event_SmokeGrenadeDetonate, EventHookMode_Post);
 	HookEvent("weapon_zoom", Event_WeaponZoom, EventHookMode_Post);
-
-
-
 	HookEvent("weapon_fire", Event_WeaponFire, EventHookMode_Pre);
 
 	// Calls upon our function named DownloadAndPrecacheFiles
@@ -244,6 +256,11 @@ public Action Event_WeaponFire(Handle event, const char[] name, bool dontBroadca
 		return Plugin_Continue;
 	}
 
+	if(!PlayerHasAutomaticPistols[client])
+	{
+		return Plugin_Continue;
+	}
+
 	CreateTimer(0.0, Timer_AutoMaticPistols, client, TIMER_FLAG_NO_MAPCHANGE);
 
 	return Plugin_Continue;
@@ -269,9 +286,9 @@ public Action Timer_AutoMaticPistols(Handle timer, int client)
 
 	GetEntityClassname(weaponEntity, weaponClassName, sizeof(weaponClassName));
 
-	if(StrEqual(weaponClassName, "weapon_cz75a", false) || StrEqual(weaponClassName, "weapon_deagle", false) || StrEqual(weaponClassName, "weapon_elite", false) || StrEqual(weaponClassName, "weapon_fiveseven", false) || StrEqual(weaponClassName, "weapon_glock", false) || StrEqual(weaponClassName, "weapon_hkp2000", false) || StrEqual(weaponClassName, "weapon_p250", false) || StrEqual(weaponClassName, "weapon_revolver", false) || StrEqual(weaponClassName, "weapon_tec9", false) || StrEqual(weaponClassName, "weapon_usp_silencer", false))
+	if(StrEqual(weaponClassName, "weapon_deagle", false) || StrEqual(weaponClassName, "weapon_elite", false) || StrEqual(weaponClassName, "weapon_fiveseven", false) || StrEqual(weaponClassName, "weapon_glock", false) || StrEqual(weaponClassName, "weapon_hkp2000", false) || StrEqual(weaponClassName, "weapon_p250", false) || StrEqual(weaponClassName, "weapon_revolver", false) || StrEqual(weaponClassName, "weapon_tec9", false) || StrEqual(weaponClassName, "weapon_usp_silencer", false))
 	{
-		SetEntPropFloat(client, Prop_Send, "m_flNextAttack", 0.0);
+	//	SetEntPropFloat(client, Prop_Send, "m_flNextAttack", 0.0);
 
 		SetEntProp(client, Prop_Send, "m_iShotsFired", 0);
 	}
@@ -878,6 +895,56 @@ public Action Event_OnPostThink(int client)
 		return Plugin_Continue;
 	}
 
+
+
+
+// m_bShouldIgnoreOffsetAndAccuracy 
+// m_fAccuracyPenalty 
+// m_iRecoilIndex 
+// m_fLastShotTime 
+ 
+// m_viewPunchAngle 
+// m_aimPunchAngle
+// m_aimPunchAngleVel 
+// m_iShotsFired
+//new ActiveWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+//SetEntPropFloat(ActiveWeapon, Prop_Send, "m_fAccuracyPenalty", 5.0); 
+
+
+/* - Rapid Fire
+	int WeaponSecondary = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
+
+	if(!IsValidEntity(WeaponSecondary))
+	{
+		return Plugin_Continue;
+	}
+
+	SetEntPropFloat(client, Prop_Send, "m_flNextAttack", 0.0);
+
+	SetEntProp(client, Prop_Send, "m_iShotsFired", 0);
+*/
+
+
+
+
+//	int WeaponSecondary = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
+
+//	if(!IsValidEntity(WeaponSecondary))
+//	{
+//		return Plugin_Continue;
+//	}
+
+//	SetEntPropFloat(WeaponSecondary, Prop_Send, "m_fAccuracyPenalty", 0.0);
+
+//	SetEntPropFloat(client, Prop_Send, "m_flNextAttack", 0.0);
+
+//	SetEntProp(client, Prop_Send, "m_iShotsFired", 0);
+
+
+
+
+
+
 	if(PlayerHasRadarReveal[client])
 	{
 		for(int i = 1 ;i <= MaxClients; i++)
@@ -1032,6 +1099,12 @@ public Action ResetAllEffects(int client)
 		PlayerHasAbsorptionShield[client] = 0;
 	}
 
+	// Automatic Pistols
+	if(PlayerHasAutomaticPistols[client])
+	{
+		PlayerHasAutomaticPistols[client] = false;
+	}
+
 	// Banish
 	if(PlayerHasBanish[client])
 	{
@@ -1123,6 +1196,12 @@ public Action ResetAllEffects(int client)
 	if(PlayerHasNoClip[client])
 	{
 		PlayerHasNoClip[client] = false;
+	}
+
+	// No Recoil
+	if(PlayerHasNoRecoil[client])
+	{
+		PlayerHasNoRecoil[client] = false;
 	}
 
 	// NoScope
@@ -1361,6 +1440,78 @@ public Action Timer_RemoveSetfxAbsorptionShield(Handle timer, int client)
 }
 
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// Command - Setfx AutomaticPistols																//
+// - Usage: wcs_setfx automaticpistols <userid> <operator> <1 On / 0 Off> <time> 				//
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+public Action Command_SetfxAutomaticPistols(int args)
+{
+	char userid[128];
+	GetCmdArg(1, userid, sizeof(userid));
+	int client = StringToInt(userid);
+	client = GetClientOfUserId(client);
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	char operator_char[16];
+	GetCmdArg(2, operator_char, sizeof(operator_char));
+
+	if(!StrEqual(operator_char, "="))
+	{
+		PrintToServer("Command Syntax Error:");
+		PrintToServer("wcs_setfx automaticpistols only supports the following operator: '='");
+		return Plugin_Continue;
+	}
+
+	char amount_char[16];
+	GetCmdArg(3, amount_char, sizeof(amount_char));
+	int amount = StringToInt(amount_char);
+	if(amount == 0)
+	{
+		PlayerHasAutomaticPistols[client] = false;
+		return Plugin_Continue;
+	}
+	else if(amount == 1)
+	{
+		PlayerHasAutomaticPistols[client] = true;
+	}
+	else
+	{
+		PrintToServer("Command Syntax Error:");
+		PrintToServer("wcs_setfx automaticpistols only supports the following values: '0', '1'");
+		return Plugin_Continue;
+	}
+
+	char time_char[32];
+	GetCmdArg(4, time_char, sizeof(time_char));
+	float time = StringToFloat(time_char);
+	if(time > 0.00)
+	{
+		CreateTimer(time, Timer_RemoveSetfxAutomaticPistols, client, TIMER_FLAG_NO_MAPCHANGE);
+	}
+
+
+	return Plugin_Continue;
+}
+
+
+
+public Action Timer_RemoveSetfxAutomaticPistols(Handle timer, int client)
+{
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	PlayerHasAutomaticPistols[client] = false;
+
+	return Plugin_Continue;
+}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2603,6 +2754,87 @@ public Action Timer_RemoveSetfxNoClip(Handle timer, int client)
 	return Plugin_Continue;
 }
 
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Command - Setfx NoRecoil															//
+// - Usage: wcs_setfx norecoil <userid> <operator> <1 On / 0 Off> <time> 			//
+//////////////////////////////////////////////////////////////////////////////////////
+
+
+public Action Command_SetfxNoRecoil(int args)
+{
+	char userid[128];
+	GetCmdArg(1, userid, sizeof(userid));
+	int client = StringToInt(userid);
+	client = GetClientOfUserId(client);
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	char operator_char[16];
+	GetCmdArg(2, operator_char, sizeof(operator_char));
+
+	if(!StrEqual(operator_char, "="))
+	{
+		PrintToServer("Command Syntax Error:");
+		PrintToServer("wcs_setfx norecoil only supports the following operator: '='");
+		return Plugin_Continue;
+	}
+
+	char amount_char[16];
+	GetCmdArg(3, amount_char, sizeof(amount_char));
+	int amount = StringToInt(amount_char);
+	if(amount == 0)
+	{
+		PlayerHasNoRecoil[client] = false;
+		cvar_AccuracyNoSpread.ReplicateToClient(client, "0");
+		cvar_RecoilScale.ReplicateToClient(client, "2.0");
+		return Plugin_Continue;
+	}
+	else if(amount == 1)
+	{
+		cvar_AccuracyNoSpread.ReplicateToClient(client, "1");
+		cvar_RecoilScale.ReplicateToClient(client, "0");
+		PlayerHasNoRecoil[client] = true;
+	}
+	else
+	{
+		PrintToServer("Command Syntax Error:");
+		PrintToServer("wcs_setfx norecoil only supports the following values: '0', '1'");
+		return Plugin_Continue;
+	}
+
+	char time_char[32];
+	GetCmdArg(4, time_char, sizeof(time_char));
+	float time = StringToFloat(time_char);
+	if(time > 0.00)
+	{
+		CreateTimer(time, Timer_RemoveSetfxRecoil, client, TIMER_FLAG_NO_MAPCHANGE);
+	}
+
+	return Plugin_Continue;
+}
+
+
+public Action Timer_RemoveSetfxRecoil(Handle timer, int client)
+{
+	if(!IsValidClient(client))
+	{
+		return Plugin_Continue;
+	}
+
+	cvar_AccuracyNoSpread.ReplicateToClient(client, "0");
+	cvar_RecoilScale.ReplicateToClient(client, "2.0");
+	PlayerHasNoRecoil[client] = false;
+
+	return Plugin_Continue;
+}
 
 
 //////////////////////////////////////////////////////////////////////////////////////
