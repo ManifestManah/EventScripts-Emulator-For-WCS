@@ -225,7 +225,7 @@ def wcs_setfx_quickexplode(command_info, player:convert_userid_to_player, operat
 def wcs_setfx_quickplant(command_info, player:convert_userid_to_player, operator:str, value:float, time:float=0):
     queue_command_string('wcs_caller_setfxquickplant %s %s %s %s' % (player.userid, operator, value, time))
 
-# Prevents the playr from scoping for more than 0.25 seconds at a time, forcing the player to quick-scope
+# Prevents the player from scoping for more than 0.25 seconds at a time, forcing the player to quick-scope
 @TypedServerCommand(["wcs_setfx", "quickscope"])
 def wcs_setfx_quickscope(command_info, player:convert_userid_to_player, operator:str, value:float, time:float=0):
     queue_command_string('wcs_caller_setfxquickscope %s %s %s %s' % (player.userid, operator, value, time))
