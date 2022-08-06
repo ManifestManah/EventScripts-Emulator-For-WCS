@@ -166,8 +166,8 @@ def wcs_setfx_falldamage(command_info, player:convert_userid_to_player, operator
 # 3 - Super Quick Flickering
 # 4 - Quick Flicker (Gradually becoming more transparent, then re-apparent)
 # 5 - Fully Invisible, Only Footprint Shadows are left 
-@TypedServerCommand(["wcs_setfx", "flicker"])
-def wcs_setfx_flicker(command_info, player:convert_userid_to_player, operator:str, value:float, time:float=0):
+@TypedServerCommand(["wcs_setfx", "flickering"])
+def wcs_setfx_flickering(command_info, player:convert_userid_to_player, operator:str, value:float, time:float=0):
     queue_command_string('wcs_caller_setfxflicker %s %s %s %s' % (player.userid, operator, value, time))
 
 # Changes the player's fov (Field of view)
