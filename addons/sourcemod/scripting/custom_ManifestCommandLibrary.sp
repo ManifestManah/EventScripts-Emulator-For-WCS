@@ -3456,6 +3456,7 @@ public Action Command_SetfxReincarnation(int args)
 			if(!GetEntProp(client, Prop_Send, "m_bHasHelmet"))
 			{
 				int IsArmourFree = GetConVarInt(FindConVar("mp_free_armor"));
+				
 				if(IsArmourFree == 0)
 				{
 					ReincarnationItemKevlar[client] = true;
@@ -3507,47 +3508,54 @@ public void GiveReincarnationItems(int client)
 {
 	if(!PlayerHasReincarnation[client])
 	{
-		int WeaponPrimary = GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY);
-		int WeaponSecondary = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
+		return;
+	}
 
-		if(IsValidEntity(WeaponPrimary))
-		{
-			CS_DropWeapon(client, WeaponPrimary, false, false);
-		}
-		
-		if(IsValidEntity(WeaponSecondary))
-		{
-			CS_DropWeapon(client, WeaponSecondary, false, false);
-		}
+	int WeaponPrimary = GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY);
+	int WeaponSecondary = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
+
+	if(IsValidEntity(WeaponPrimary))
+	{
+		CS_DropWeapon(client, WeaponPrimary, false, false);
 
 		GivePlayerItem(client, ReincarnationWeaponPrimary[client]);
-		GivePlayerItem(client, ReincarnationWeaponSecondary[client]);
 
 		ReincarnationWeaponPrimary[client] = "-1";
-		ReincarnationWeaponSecondary[client] = "-1";
+	}
+	
+	if(IsValidEntity(WeaponSecondary))
+	{
+		CS_DropWeapon(client, WeaponSecondary, false, false);
 
-		if(!ReincarnationItemDefuser[client])
+		GivePlayerItem(client, ReincarnationWeaponSecondary[client]);
+
+		ReincarnationWeaponSecondary[client] = "-1";
+	}
+
+	if(ReincarnationItemDefuser[client])
+	{
+		if(GetClientTeam(client) == 3)
 		{
-			ReincarnationItemDefuser[client] = false;
 			SetEntProp(client, Prop_Send, "m_bHasDefuser", 1);
 		}
 
-		if(!ReincarnationItemKevlar[client])
-		{
-			ReincarnationItemKevlar[client] = false;
-			GivePlayerItem(client, "item_kevlar");
-		}
-
-		if(!ReincarnationItemKevlarHelmet[client])
-		{
-			ReincarnationItemKevlarHelmet[client] = false;
-			SetEntProp(client, Prop_Send, "m_bHasHelmet", 1);	
-		}
-		
-		PlayerHasReincarnation[client] = false;
+		ReincarnationItemDefuser[client] = false;
 	}
-}
 
+	if(ReincarnationItemKevlar[client])
+	{
+		ReincarnationItemKevlar[client] = false;
+		GivePlayerItem(client, "item_kevlar");
+	}
+
+	if(ReincarnationItemKevlarHelmet[client])
+	{
+		ReincarnationItemKevlarHelmet[client] = false;
+		SetEntProp(client, Prop_Send, "m_bHasHelmet", 1);	
+	}
+	
+	PlayerHasReincarnation[client] = false;
+}
 
 
 
