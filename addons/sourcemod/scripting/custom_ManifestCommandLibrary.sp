@@ -54,7 +54,7 @@ bool PlayerHasQuickExplode[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasQuickPlant[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasQuickScope[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasPlantBombAnywhere[MAXPLAYERS + 1] = {false,...};
-bool PlayerHasRadarReveal[MAXPLAYERS + 1] = {false,...};
+//bool PlayerHasRadarReveal[MAXPLAYERS + 1] = {false,...};
 bool PlayerHasReversedMovement[MAXPLAYERS + 1] = { false, ... };
 bool PlayerHasReincarnation[MAXPLAYERS + 1] = { false, ... };
 bool PlayerHasThirdPerson[MAXPLAYERS + 1] = {false,...};
@@ -150,7 +150,7 @@ public void OnPluginStart()
 	RegServerCmd("wcs_caller_setfxquickexplode", Command_SetfxQuickExplode);
 	RegServerCmd("wcs_caller_setfxquickplant", Command_SetfxQuickPlant);
 	RegServerCmd("wcs_caller_setfxquickscope", Command_SetfxQuickScope);
-	RegServerCmd("wcs_caller_setfxradarreveal", Command_SetfxRadarReveal);
+//	RegServerCmd("wcs_caller_setfxradarreveal", Command_SetfxRadarReveal);
 	RegServerCmd("wcs_caller_setfxreincarnation", Command_SetfxReincarnation);
 	RegServerCmd("wcs_caller_setfxreversemovement", Command_SetfxReverseMovement);
 	RegServerCmd("wcs_caller_setfxthirdperson", Command_SetfxThirdPerson);
@@ -942,9 +942,7 @@ public Action Event_OnPostThink(int client)
 
 
 
-
-
-
+/*
 	if(PlayerHasRadarReveal[client])
 	{
 		for(int i = 1 ;i <= MaxClients; i++)
@@ -967,6 +965,7 @@ public Action Event_OnPostThink(int client)
 			SetEntPropEnt(i, Prop_Send, "m_bSpotted", 1);
 		}
 	}
+*/
 
 	// Plant Bomb Anywhere
 	if(PlayerHasPlantBombAnywhere[client])
@@ -1261,11 +1260,13 @@ public Action ResetAllEffects(int client)
 		PlayerHasQuickScope[client] = false;
 	}
 
+/*
 	// Radar Reveal
 	if(PlayerHasRadarReveal[client])
 	{
 		PlayerHasRadarReveal[client] = false;
 	}
+*/
 
 	// Reversed Movement Keys
 	if(PlayerHasReversedMovement[client])
@@ -3564,7 +3565,7 @@ public void GiveReincarnationItems(int client)
 // - Usage: wcs_setfx radarreveal <userid> <operator> <1 On / 0 Off> <time> 		//
 //////////////////////////////////////////////////////////////////////////////////////
 
-
+/*
 public Action Command_SetfxRadarReveal(int args)
 {
 	char userid[128];
@@ -3629,7 +3630,7 @@ public Action Timer_RemoveSetfxRadarReveal(Handle timer, int client)
 
 	return Plugin_Continue;
 }
-
+*/
 
 
 //////////////////////////////////////////////////////////////////////////////////////
