@@ -231,9 +231,9 @@ def wcs_setfx_quickscope(command_info, player:convert_userid_to_player, operator
     queue_command_string('wcs_caller_setfxquickscope %s %s %s %s' % (player.userid, operator, value, time))
 
 # Reveals all the players on the opposite team by showing them on the radar to the entire team
-@TypedServerCommand(["wcs_setfx", "radarreveal"])
-def wcs_setfx_radarreveal(command_info, player:convert_userid_to_player, operator:str, value:float, time:float=0):
-    queue_command_string('wcs_caller_setfxradarreveal %s %s %s %s' % (player.userid, operator, value, time))
+# @TypedServerCommand(["wcs_setfx", "radarreveal"])
+# def wcs_setfx_radarreveal(command_info, player:convert_userid_to_player, operator:str, value:float, time:float=0):
+#    queue_command_string('wcs_caller_setfxradarreveal %s %s %s %s' % (player.userid, operator, value, time))
 
 # Gives you the same  primary weapon, secondary weapon, defuse kit, armor and helmet next time you spawn
 @TypedServerCommand(["wcs_setfx", "reincarnation"])
