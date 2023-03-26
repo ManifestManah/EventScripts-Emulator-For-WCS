@@ -1,0 +1,6 @@
+UnlitGeneric
+{
+	$basetexture "sun/overlay_v2"
+	$additive 1
+	$vertexColor 1
+}
