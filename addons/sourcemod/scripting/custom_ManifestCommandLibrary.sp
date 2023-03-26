@@ -1,5 +1,6 @@
 // List of Includes
 #include <sourcemod>
+#include <multicolors>
 #include <sdkhooks>
 #include <sdktools>
 #include <cstrike>
@@ -117,9 +118,6 @@ public void OnPluginStart()
 {
 	cvar_AccuracyNoSpread = FindConVar("weapon_accuracy_nospread");
 	cvar_RecoilScale = FindConVar("weapon_recoil_scale");
-
-
-
 
 
 	//////////////////////////
@@ -244,6 +242,11 @@ public void OnPluginStart()
 
 
 
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Command - Switch Team 															//
+// - Usage: es_tell <userid> 														//
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 // This section is executed everytime the player fires a weapon or left attacks with his knife
@@ -895,7 +898,11 @@ public Action Event_OnPostThink(int client)
 		return Plugin_Continue;
 	}
 
-
+	// Plant Bomb Anywhere
+	if(PlayerHasPlantBombAnywhere[client])
+	{
+		SetEntPropEnt(client, Prop_Send, "m_bInBombZone", 1);
+	}
 
 
 // m_bShouldIgnoreOffsetAndAccuracy 
@@ -966,12 +973,6 @@ public Action Event_OnPostThink(int client)
 		}
 	}
 */
-
-	// Plant Bomb Anywhere
-	if(PlayerHasPlantBombAnywhere[client])
-	{
-		SetEntPropEnt(client, Prop_Send, "m_bInBombZone", 1);
-	}
 
 	return Plugin_Continue;
 }
@@ -3856,6 +3857,58 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float veloc
 		return Plugin_Continue;
 	}
 
+	if(buttons & IN_DUCK)
+	{
+		int userid = GetClientUserId(client);
+
+		char ServerCommandMessage[128];
+
+		FormatEx(ServerCommandMessage, sizeof(ServerCommandMessage), "es wcsgroup set is_ducking %i 1", userid);
+
+		ServerCommand(ServerCommandMessage);
+
+		// Crouching Invisibility
+		if(PlayerHasCrouchInvisibility[client])
+		{
+			if(GetEntityFlags(client) & FL_ONGROUND)
+			{
+				SetEntityRenderMode(client, RENDER_TRANSALPHA);
+				Entity_SetRenderColor(client, 255, 255, 255, PlayerHasCrouchInvisibility[client]);
+
+				return Plugin_Continue;				
+			}
+			else
+			{
+				Entity_SetRenderColor(client, 255, 255, 255, 255);
+
+				return Plugin_Continue;
+			}
+		}
+	}
+
+	else
+	{
+		int userid = GetClientUserId(client);
+
+		char ServerCommandMessage[128];
+
+		FormatEx(ServerCommandMessage, sizeof(ServerCommandMessage), "es wcsgroup set is_ducking %i 0", userid);
+
+		ServerCommand(ServerCommandMessage);
+
+		// Crouching Invisibility
+		if(PlayerHasCrouchInvisibility[client])
+		{
+			Entity_SetRenderColor(client, 255, 255, 255, 255);
+
+			return Plugin_Continue;
+		}
+	}
+
+	return Plugin_Continue;
+}
+
+/*
 	// If the player has reversed movement enabled then execute this section
 	if(PlayerHasReversedMovement[client])
 	{
@@ -3918,62 +3971,11 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float veloc
 
 
 
-	if(buttons & IN_DUCK)
-	{
-		int userid = GetClientUserId(client);
 
-		char ServerCommandMessage[128];
-
-		FormatEx(ServerCommandMessage, sizeof(ServerCommandMessage), "es wcsgroup set is_ducking %i 1", userid);
-
-		ServerCommand(ServerCommandMessage);
-
-		// Crouching Invisibility
-		if(PlayerHasCrouchInvisibility[client])
-		{
-			if(GetEntityFlags(client) & FL_ONGROUND)
-			{
-				SetEntityRenderMode(client, RENDER_TRANSALPHA);
-				Entity_SetRenderColor(client, 255, 255, 255, PlayerHasCrouchInvisibility[client]);
-
-				return Plugin_Continue;				
-			}
-			else
-			{
-				Entity_SetRenderColor(client, 255, 255, 255, 255);
-
-				return Plugin_Continue;
-			}
-		}
-	}
-	else
-	{
-		int userid = GetClientUserId(client);
-
-		char ServerCommandMessage[128];
-
-		FormatEx(ServerCommandMessage, sizeof(ServerCommandMessage), "es wcsgroup set is_ducking %i 0", userid);
-
-		ServerCommand(ServerCommandMessage);
-
-		// Crouching Invisibility
-		if(PlayerHasCrouchInvisibility[client])
-		{
-			Entity_SetRenderColor(client, 255, 255, 255, 255);
-
-			return Plugin_Continue;
-		}
-	}
-
-
-
-
-
-	
 
 	return Plugin_Continue;
 }
-
+*/
 
 
 
@@ -5404,6 +5406,7 @@ stock Entity_GetNextChild2(parent, start=0)
 // - Downloading & Precachinging - //
 /////////////////////////////////////
 
+
 public void DownloadAndPrecacheFiles()
 {
 	// Used by the wcs_blackhole command
@@ -5634,6 +5637,9 @@ public void DownloadAndPrecacheFiles()
 	AddFileToDownloadsTable("materials/sprites/yellowglow1.vmt");
 	AddFileToDownloadsTable("materials/sprites/yellowglow1.vtf");
 
+	AddFileToDownloadsTable("materials/sun/overlay_v2.vmt");
+	AddFileToDownloadsTable("materials/sun/overlay_v2.vtf");
+
 
 	/////////////////////////////////////
 	// - Effect Materials Precaching - //
@@ -5737,6 +5743,8 @@ public void DownloadAndPrecacheFiles()
 	PrecacheGeneric("materials/sprites/xbeam2.vmt", true);
 	PrecacheGeneric("materials/sprites/yellowglow1.vmt", true);
 	PrecacheGeneric("materials/sprites/water_drop.vmt", true);
+
+	PrecacheGeneric("materials/sun/overlay_v2.vmt", true);
 
 
 	////////////////////////
