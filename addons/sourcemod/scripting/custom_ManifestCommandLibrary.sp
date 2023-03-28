@@ -5780,30 +5780,30 @@ public void DownloadAndPrecacheFiles()
 	// - Sound Precaching - //
 	//////////////////////////
 
-	PrecacheSound("sound/skills/breathfire.mp3", true);
-	PrecacheSound("sound/skills/frostbolt.mp3", true);
-	PrecacheSound("sound/skills/hymn.mp3", true);
-	PrecacheSound("sound/skills/stancehealmonk.mp3", true);
+	PrecacheSound("skills/breathfire.mp3", true);
+	PrecacheSound("skills/frostbolt.mp3", true);
+	PrecacheSound("skills/hymn.mp3", true);
+	PrecacheSound("skills/stancehealmonk.mp3", true);
 	
-	PrecacheSound("sound/wcs/clearcast.mp3", true);
-	PrecacheSound("sound/wcs/defiance.mp3", true);
-	PrecacheSound("sound/wcs/divine.mp3", true);
-	PrecacheSound("sound/wcs/execute.mp3", true);
-	PrecacheSound("sound/wcs/firecast.mp3", true);
-	PrecacheSound("sound/wcs/fireloop.mp3", true);
-	PrecacheSound("sound/wcs/heal.mp3", true);
-	PrecacheSound("sound/wcs/invisibility.mp3", true);
-	PrecacheSound("sound/wcs/levelup.mp3", true);
-	PrecacheSound("sound/wcs/lightning.mp3", true);
-	PrecacheSound("sound/wcs/mole.mp3", true);
-	PrecacheSound("sound/wcs/resurrect.mp3", true);
-	PrecacheSound("sound/wcs/root.mp3", true);
-	PrecacheSound("sound/wcs/shadow.mp3", true);
-	PrecacheSound("sound/wcs/shamanisticrage.mp3", true);
-	PrecacheSound("sound/wcs/speed.mp3", true);
-	PrecacheSound("sound/wcs/teleport.mp3", true);
-	PrecacheSound("sound/wcs/tidetotem.mp3", true);
-	PrecacheSound("sound/wcs/tomes.mp3", true);
-	PrecacheSound("sound/wcs/vampiricstrike.mp3", true);
-	PrecacheSound("sound/wcs/zeal.mp3", true);
+	PrecacheSound("wcs/clearcast.mp3", true);
+	PrecacheSound("wcs/defiance.mp3", true);
+	PrecacheSound("wcs/divine.mp3", true);
+	PrecacheSound("wcs/execute.mp3", true);
+	PrecacheSound("wcs/firecast.mp3", true);
+	PrecacheSound("wcs/fireloop.mp3", true);
+	PrecacheSound("wcs/heal.mp3", true);
+	PrecacheSound("wcs/invisibility.mp3", true);
+	PrecacheSound("wcs/levelup.mp3", true);
+	PrecacheSound("wcs/lightning.mp3", true);
+	PrecacheSound("wcs/mole.mp3", true);
+	PrecacheSound("wcs/resurrect.mp3", true);
+	PrecacheSound("wcs/root.mp3", true);
+	PrecacheSound("wcs/shadow.mp3", true);
+	PrecacheSound("wcs/shamanisticrage.mp3", true);
+	PrecacheSound("wcs/speed.mp3", true);
+	PrecacheSound("wcs/teleport.mp3", true);
+	PrecacheSound("wcs/tidetotem.mp3", true);
+	PrecacheSound("wcs/tomes.mp3", true);
+	PrecacheSound("wcs/vampiricstrike.mp3", true);
+	PrecacheSound("wcs/zeal.mp3", true);
 }
