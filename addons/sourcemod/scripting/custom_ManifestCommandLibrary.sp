@@ -5637,9 +5637,6 @@ public void DownloadAndPrecacheFiles()
 	AddFileToDownloadsTable("materials/sprites/yellowglow1.vmt");
 	AddFileToDownloadsTable("materials/sprites/yellowglow1.vtf");
 
-	AddFileToDownloadsTable("materials/sun/overlay_v2.vmt");
-	AddFileToDownloadsTable("materials/sun/overlay_v2.vtf");
-
 
 	/////////////////////////////////////
 	// - Effect Materials Precaching - //
