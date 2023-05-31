@@ -39,8 +39,8 @@ For this package to work, it is required that you first install the following:
 
 
 ## Bug Reports, Problems & Help
-Should you encounter a bug or an issue then please report it in our [Discord's](https://discord.gg/2DnAXkF) bug channel, then we'll look in to it, find a solution and include it in an update.
-If you're having trouble installing the package, you can also get assistance in our [Discord](https://discord.gg/2DnAXkF).
+Should you encounter a bug or an issue then please report it in our [Discord's](https://discord.com/invite/rx8Q4PrK6C) bug channel, then we'll look in to it, find a solution and include it in an update.
+If you're having trouble installing the package, you can also get assistance in our [Discord](https://discord.com/invite/rx8Q4PrK6C).
 
 
 
